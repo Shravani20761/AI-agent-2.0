@@ -1,0 +1,21 @@
+{
+  "name": "voiceagent",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently --names \"backend,frontend\" --prefix-colors \"cyan,magenta\" \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dograh:up": "docker compose --project-directory ./dograh -f ./dograh/docker-compose.yaml --env-file ./dograh/.env up",
+    "dograh:up:d": "docker compose --project-directory ./dograh -f ./dograh/docker-compose.yaml --env-file ./dograh/.env up -d",
+    "dograh:down": "docker compose --project-directory ./dograh -f ./dograh/docker-compose.yaml --env-file ./dograh/.env down",
+    "dograh:logs": "docker compose --project-directory ./dograh -f ./dograh/docker-compose.yaml --env-file ./dograh/.env logs -f api ui"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^10.0.1"
+  }
+}

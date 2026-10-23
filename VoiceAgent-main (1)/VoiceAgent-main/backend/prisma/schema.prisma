@@ -1,0 +1,591 @@
+generator client {
+  provider   = "prisma-client-js"
+  output     = "../src/generated/prisma"
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum Role {
+  ADMIN
+  MANAGER
+  AGENT
+}
+
+enum LifecycleStage {
+  LEAD
+  INTERESTED
+  DEMO_SCHEDULED
+  DEMO_ATTENDED
+  VISIT_SCHEDULED
+  VISIT_COMPLETED
+  ADMISSION_PENDING
+  STUDENT
+  ALUMNI
+  LOST
+}
+
+enum LeadSource {
+  WEBSITE
+  PHONE
+  WALKIN
+  WHATSAPP
+  META_ADS
+  GOOGLE_ADS
+  JUSTDIAL
+  INSTAGRAM
+  FACEBOOK
+  COLD_CALL
+  REFERRAL
+  VOICE_AGENT
+  MANUAL
+}
+
+enum AppointmentType {
+  DEMO
+  VISIT
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  ATTENDED
+  CANCELLED
+  NO_SHOW
+  RESCHEDULED
+}
+
+enum AdmissionStage {
+  QUALIFIED
+  VISIT_SCHEDULED
+  VISIT_COMPLETED
+  ADMISSION_PENDING
+  ADMITTED
+  DROPPED
+}
+
+enum FollowUpType {
+  DEMO
+  DEMO_SCHEDULING
+  VISIT
+  ADMISSION
+  FEE
+  FEE_FOLLOW_UP
+  CALLBACK
+  REVIEW
+  GENERAL
+}
+
+enum FollowUpStatus {
+  PENDING
+  COMPLETED
+  OVERDUE
+  CANCELLED
+}
+
+enum CommType {
+  CALL
+  WHATSAPP
+  SMS
+  NOTE
+  EMAIL
+}
+
+enum CommDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum AgentType {
+  ENQUIRY
+  COLD_CALLING
+  WARM_LEAD
+  ADMISSION_CONVERSION
+  REVIEW_REFERRAL
+  STUDENT_SUPPORT
+  FEE_ACCOUNTS
+  STUDENT_ENGAGEMENT
+  FEE_RECOVERY
+  MANUAL
+}
+
+enum SupportTicketType {
+  TIMETABLE
+  BATCH_CHANGE
+  STUDY_MATERIAL
+  APP_ISSUE
+  ENGAGEMENT
+  GENERAL
+}
+
+enum SupportTicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum ReviewReferralType {
+  REVIEW
+  REFERRAL
+}
+
+enum ReviewStatus {
+  REQUESTED
+  RECEIVED
+  DECLINED
+}
+
+enum PaymentMethod {
+  CASH
+  UPI
+  BANK_TRANSFER
+  CARD
+  CHEQUE
+  OTHER
+}
+
+enum TeacherAvailabilityStatus {
+  AVAILABLE
+  ON_LEAVE
+  PARTIAL
+}
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  name         String
+  role         Role     @default(AGENT)
+  avatarUrl    String?  @map("avatar_url")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  assignedPeople   Person[]       @relation("AssignedAgent")
+  assignedWarmLeads WarmLead[]    @relation("WarmLeadAgent")
+  createdFollowUps  FollowUp[]    @relation("FollowUpCreator")
+  assignedTickets   SupportTicket[] @relation("TicketAgent")
+  recordedPayments  Payment[]
+
+  @@map("users")
+}
+
+model Person {
+  id             String         @id @default(uuid())
+  name           String
+  phone          String         @unique
+  email          String?
+  lifecycleStage LifecycleStage @default(LEAD) @map("lifecycle_stage")
+  source         LeadSource     @default(MANUAL)
+  assignedTo     String?        @map("assigned_to")
+  notes          String?
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+
+  assignedUser   User?          @relation("AssignedAgent", fields: [assignedTo], references: [id])
+  enquiries      Enquiry[]
+  coldCalls      ColdCall[]
+  warmLeads      WarmLead[]
+  appointments   Appointment[]
+  admissions     Admission[]
+  student        Student?
+  followUps      FollowUp[]
+  communications Communication[]
+  agentLogs      AgentLog[]
+  reviewReferrals   ReviewReferral[]
+  outboundCallQueue OutboundCallQueue[]
+  supportTickets SupportTicket[]
+
+  @@index([phone])
+  @@index([lifecycleStage])
+  @@map("people")
+}
+
+model Course {
+  id           String   @id @default(uuid())
+  slug         String   @unique
+  name         String
+  duration     String
+  feeMonthly   Int      @map("fee_monthly")
+  batchTimings String   @map("batch_timings")
+  description  String?
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  batches    Batch[]
+  admissions Admission[]
+  enquiries  Enquiry[]
+
+  @@map("courses")
+}
+
+model Batch {
+  id           String   @id @default(uuid())
+  courseId     String   @map("course_id")
+  name         String
+  timings      String
+  facultyName  String?  @map("faculty_name")
+  startDate    DateTime? @map("start_date")
+  maxSeats     Int      @default(30) @map("max_seats")
+  currentSeats Int      @default(0) @map("current_seats")
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  course          Course           @relation(fields: [courseId], references: [id])
+  students        Student[]
+  timetableEntries TimetableEntry[]
+  testSchedules   TestSchedule[]
+
+  @@map("batches")
+}
+
+model Enquiry {
+  id              String     @id @default(uuid())
+  personId        String     @map("person_id")
+  source          LeadSource @default(WEBSITE)
+  courseInterested String?   @map("course_interested")
+  courseId        String?    @map("course_id")
+  status          String     @default("New")
+  assignedTo      String?    @map("assigned_to")
+  notes           String?
+  createdAt       DateTime   @default(now()) @map("created_at")
+  updatedAt       DateTime   @updatedAt @map("updated_at")
+
+  person Person  @relation(fields: [personId], references: [id])
+  course Course? @relation(fields: [courseId], references: [id])
+
+  @@index([personId])
+  @@index([status])
+  @@index([source])
+  @@map("enquiries")
+}
+
+model ColdCall {
+  id           String    @id @default(uuid())
+  personId     String    @map("person_id")
+  campaign     String?
+  agentType    AgentType @default(COLD_CALLING) @map("agent_type")
+  outcome      String?
+  durationSecs Int?      @map("duration_secs")
+  calledAt     DateTime  @default(now()) @map("called_at")
+  notes        String?
+  dograhRunId  String?   @unique @map("dograh_run_id")
+
+  person Person @relation(fields: [personId], references: [id])
+
+  @@index([personId])
+  @@index([campaign])
+  @@map("cold_calls")
+}
+
+model WarmLead {
+  id                  String   @id @default(uuid())
+  personId            String   @map("person_id")
+  enquiryId           String?  @map("enquiry_id")
+  qualificationScore  Int?     @map("qualification_score")
+  demoStatus          String?  @map("demo_status")
+  visitStatus         String?  @map("visit_status")
+  assignedTo          String?  @map("assigned_to")
+  notes               String?
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  person       Person @relation(fields: [personId], references: [id])
+  assignedUser User?  @relation("WarmLeadAgent", fields: [assignedTo], references: [id])
+
+  @@index([personId])
+  @@map("warm_leads")
+}
+
+model Appointment {
+  id          String            @id @default(uuid())
+  personId    String            @map("person_id")
+  type        AppointmentType
+  scheduledAt DateTime          @map("scheduled_at")
+  status      AppointmentStatus @default(SCHEDULED)
+  location    String?
+  attended    Boolean           @default(false)
+  createdBy   String?           @map("created_by")
+  notes       String?
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+
+  person Person @relation(fields: [personId], references: [id])
+
+  @@index([personId])
+  @@index([scheduledAt])
+  @@map("appointments")
+}
+
+model Admission {
+  id                 String         @id @default(uuid())
+  personId           String         @map("person_id")
+  courseId           String?        @map("course_id")
+  stage              AdmissionStage @default(QUALIFIED)
+  scholarshipAmount  Int?           @map("scholarship_amount")
+  seatConfirmed      Boolean        @default(false) @map("seat_confirmed")
+  admittedAt         DateTime?      @map("admitted_at")
+  notes              String?
+  createdAt          DateTime       @default(now()) @map("created_at")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
+
+  person  Person  @relation(fields: [personId], references: [id])
+  course  Course? @relation(fields: [courseId], references: [id])
+  student Student?
+
+  @@index([personId])
+  @@index([stage])
+  @@map("admissions")
+}
+
+model Student {
+  id             String   @id @default(uuid())
+  personId       String   @unique @map("person_id")
+  admissionId    String?  @unique @map("admission_id")
+  batchId        String?  @map("batch_id")
+  rollNumber     String?  @map("roll_number")
+  enrollmentDate DateTime @default(now()) @map("enrollment_date")
+  status         String   @default("active")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  person    Person     @relation(fields: [personId], references: [id])
+  admission Admission? @relation(fields: [admissionId], references: [id])
+  batch     Batch?     @relation(fields: [batchId], references: [id])
+  feePlan   FeePlan?
+
+  @@index([status])
+  @@map("students")
+}
+
+model FeePlan {
+  id                String   @id @default(uuid())
+  studentId         String   @unique @map("student_id")
+  totalAmount       Int      @map("total_amount")
+  installmentsCount Int      @default(1) @map("installments_count")
+  paidAmount        Int      @default(0) @map("paid_amount")
+  outstandingAmount Int      @map("outstanding_amount")
+  nextDueDate       DateTime? @map("next_due_date")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  student  Student   @relation(fields: [studentId], references: [id])
+  payments Payment[]
+
+  @@map("fee_plans")
+}
+
+model Payment {
+  id          String        @id @default(uuid())
+  feePlanId   String        @map("fee_plan_id")
+  amount      Int
+  method      PaymentMethod @default(CASH)
+  reference   String?
+  paidAt      DateTime      @default(now()) @map("paid_at")
+  recordedBy  String?       @map("recorded_by")
+  notes       String?
+  createdAt   DateTime      @default(now()) @map("created_at")
+
+  feePlan    FeePlan @relation(fields: [feePlanId], references: [id])
+  recordedByUser User? @relation(fields: [recordedBy], references: [id])
+
+  @@index([feePlanId])
+  @@map("payments")
+}
+
+model FollowUp {
+  id          String         @id @default(uuid())
+  personId    String         @map("person_id")
+  type        FollowUpType   @default(GENERAL)
+  status      FollowUpStatus @default(PENDING)
+  dueAt       DateTime       @map("due_at")
+  completedAt DateTime?      @map("completed_at")
+  notes       String?
+  createdBy   String?        @map("created_by")
+  agentType   AgentType?     @map("agent_type")
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+
+  person      Person @relation(fields: [personId], references: [id])
+  createdByUser User? @relation("FollowUpCreator", fields: [createdBy], references: [id])
+
+  @@index([personId])
+  @@index([dueAt])
+  @@index([status])
+  @@map("follow_ups")
+}
+
+model Communication {
+  id           String        @id @default(uuid())
+  personId     String        @map("person_id")
+  type         CommType
+  direction    CommDirection @default(INBOUND)
+  content      String?
+  recordingUrl String?       @map("recording_url")
+  agentType    AgentType?    @map("agent_type")
+  durationSecs Int?          @map("duration_secs")
+  callId       String?       @map("call_id")
+  outcome      String?       // business outcome declared by agent: interested | not_interested | demo_scheduled | callback_required | do_not_call
+  createdAt    DateTime      @default(now()) @map("created_at")
+
+  person Person @relation(fields: [personId], references: [id])
+
+  @@index([personId])
+  @@index([type])
+  @@index([createdAt])
+  @@index([callId])
+  @@map("communications")
+}
+
+model AgentLog {
+  id            String     @id @default(uuid())
+  agentType     AgentType  @map("agent_type")
+  personId      String?    @map("person_id")
+  toolUsed      String?    @map("tool_used")
+  inputSummary  String?    @map("input_summary")
+  outputSummary String?    @map("output_summary")
+  success       Boolean    @default(true)
+  createdAt     DateTime   @default(now()) @map("created_at")
+
+  person Person? @relation(fields: [personId], references: [id])
+
+  @@index([agentType])
+  @@index([createdAt])
+  @@map("agent_logs")
+}
+
+model ReviewReferral {
+  id               String             @id @default(uuid())
+  personId         String             @map("person_id")
+  type             ReviewReferralType
+  status           ReviewStatus       @default(REQUESTED)
+  platform         String?
+  referredPersonId String?            @map("referred_person_id")
+  notes            String?
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+
+  person         Person  @relation(fields: [personId], references: [id])
+
+  @@index([personId])
+  @@map("review_referrals")
+}
+
+model OutboundCallQueue {
+  id             String   @id @default(uuid())
+  agentType      String   @map("agent_type")
+  phone          String
+  personId       String?  @map("person_id")
+  relatedId      String?  @map("related_id")
+  relatedType    String?  @map("related_type")
+  workflowUuid   String   @map("workflow_uuid")
+  workflowId     Int      @map("workflow_id")
+  initialContext Json     @map("initial_context")
+  status         String   @default("QUEUED")
+  dograhRunId    Int?     @map("dograh_run_id")
+  outcome        String?
+  gatheredCtx    Json?    @map("gathered_ctx")
+  priority       Int      @default(5)
+  scheduledAt    DateTime @default(now()) @map("scheduled_at")
+  attempts       Int      @default(0)
+  maxAttempts    Int      @default(3) @map("max_attempts")
+  campaign       String?
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  person Person? @relation(fields: [personId], references: [id])
+
+  @@index([status, scheduledAt, priority])
+  @@index([personId])
+  @@map("outbound_call_queue")
+}
+
+model SupportTicket {
+  id          String              @id @default(uuid())
+  personId    String              @map("person_id")
+  type        SupportTicketType   @default(GENERAL)
+  status      SupportTicketStatus @default(OPEN)
+  description String?
+  resolvedAt  DateTime?           @map("resolved_at")
+  assignedTo  String?             @map("assigned_to")
+  createdAt   DateTime            @default(now()) @map("created_at")
+  updatedAt   DateTime            @updatedAt @map("updated_at")
+
+  person       Person @relation(fields: [personId], references: [id])
+  assignedUser User?  @relation("TicketAgent", fields: [assignedTo], references: [id])
+
+  @@index([personId])
+  @@index([status])
+  @@map("support_tickets")
+}
+
+// ─── Academic data layer (Phase A) ─────────────────────────────────────────────
+
+model TimetableEntry {
+  id          String   @id @default(uuid())
+  batchId     String   @map("batch_id")
+  dayOfWeek   Int      @map("day_of_week") // 0=Sun … 6=Sat
+  startTime   String   @map("start_time")  // "HH:MM"
+  endTime     String   @map("end_time")    // "HH:MM"
+  subject     String
+  facultyName String?  @map("faculty_name")
+  room        String?
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  batch Batch @relation(fields: [batchId], references: [id])
+
+  @@index([batchId])
+  @@map("timetable_entries")
+}
+
+model TeacherAvailability {
+  id          String                    @id @default(uuid())
+  facultyName String                    @map("faculty_name")
+  date        DateTime
+  status      TeacherAvailabilityStatus @default(AVAILABLE)
+  note        String?
+  createdAt   DateTime                  @default(now()) @map("created_at")
+
+  @@index([facultyName])
+  @@index([date])
+  @@map("teacher_availability")
+}
+
+model TestSchedule {
+  id        String   @id @default(uuid())
+  batchId   String   @map("batch_id")
+  subject   String
+  testDate  DateTime @map("test_date")
+  syllabus  String?
+  maxMarks  Int?     @map("max_marks")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  batch Batch @relation(fields: [batchId], references: [id])
+
+  @@index([batchId])
+  @@index([testDate])
+  @@map("test_schedules")
+}
+
+model Faq {
+  id        String   @id @default(uuid())
+  question  String
+  answer    String
+  category  String?
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([category])
+  @@index([isActive])
+  @@map("faqs")
+}

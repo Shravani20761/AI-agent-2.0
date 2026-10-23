@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VoiceCRM | Fees &amp; Accounts Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Geist', sans-serif;
+            background-color: #faf8ff;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(194, 198, 216, 0.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c2c6d8;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#00714d",
+                        "secondary-fixed": "#6ffbbe",
+                        "secondary": "#006c49",
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-primary-fixed-variant": "#003fa4",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "tertiary": "#7f4f00",
+                        "surface-container": "#eaedff",
+                        "surface-tint": "#0054d6",
+                        "surface-dim": "#d2d9f4",
+                        "surface-bright": "#faf8ff",
+                        "secondary-fixed-dim": "#4edea3",
+                        "secondary-container": "#6cf8bb",
+                        "on-surface-variant": "#424656",
+                        "surface-container-highest": "#dae2fd",
+                        "primary": "#0050cb",
+                        "primary-fixed-dim": "#b3c5ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "inverse-on-surface": "#eef0ff",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#c2c6d8",
+                        "on-secondary-fixed": "#002113",
+                        "on-primary-fixed": "#001849",
+                        "inverse-primary": "#b3c5ff",
+                        "inverse-surface": "#283044",
+                        "on-tertiary-container": "#fff7f1",
+                        "surface-container-low": "#f2f3ff",
+                        "on-primary-container": "#f8f7ff",
+                        "background": "#faf8ff",
+                        "surface-container-high": "#e2e7ff",
+                        "tertiary-fixed": "#ffddb8",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#131b2e",
+                        "tertiary-container": "#a06500",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#dae1ff",
+                        "surface": "#faf8ff",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "surface-variant": "#dae2fd",
+                        "outline": "#727687",
+                        "on-surface": "#131b2e",
+                        "primary-container": "#0066ff",
+                        "on-secondary-fixed-variant": "#005236"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "margin-desktop": "32px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "sidebar-width": "240px",
+                        "container-max-width": "1440px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Geist"],
+                        "label-md": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["11px", {"lineHeight": "12px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-surface border-r border-outline-variant flex flex-col py-base z-50">
+<div class="px-6 mb-8">
+<h1 class="font-headline-lg text-headline-lg font-black text-primary">VoiceCRM</h1>
+<p class="text-label-md font-label-md text-outline">AI Voice Automation</p>
+</div>
+<nav class="flex-1 space-y-1 px-3">
+<!-- Navigation Links from JSON -->
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">call</span> Cold Calling
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">record_voice_over</span> Enquiries
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">person_search</span> Warm Leads
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">event_repeat</span> Follow Ups
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">school</span> Admissions
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">star_rate</span> Reviews
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">support_agent</span> Student Support
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">menu_book</span> Academics
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-primary font-bold border-r-4 border-primary bg-surface-container-low transition-colors duration-200 scale-[0.98]" href="#">
+<span class="material-symbols-outlined">payments</span> Fees
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">hub</span> Communication Hub
+            </a>
+</nav>
+<div class="mt-auto px-3 py-4 border-t border-outline-variant space-y-1">
+<button class="w-full mb-4 bg-primary text-white py-2 rounded-lg font-label-md text-label-md hover:shadow-lg transition-all">New Lead</button>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high" href="#">
+<span class="material-symbols-outlined">settings</span> Settings
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high" href="#">
+<span class="material-symbols-outlined">help</span> Support
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-sidebar-width min-h-screen">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-40 bg-surface/80 backdrop-blur-md flex justify-between items-center h-16 px-gutter border-b border-outline-variant shadow-sm">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-body-md focus:ring-2 focus:ring-primary outline-none" placeholder="Search accounts or receipts..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="flex items-center gap-2 bg-primary-container text-on-primary-container px-4 py-1.5 rounded-full font-label-md text-label-md hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">terminal</span>
+                    Command Palette
+                </button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A close-up professional headshot of a middle-aged male corporate executive with a friendly expression. He is wearing a sharp charcoal grey suit and a crisp white shirt against a neutral, softly blurred office background. The lighting is bright and clean, reflecting a high-end corporate lifestyle aesthetic with soft highlights and professional color grading." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFTvKLQpq9xGu9Ge2BWEMgpvnW4WR4xSvFu6cW3rG-bWOEVQrYwox90plaaGk1ZGbOeP81l7tIhhknadmjQvf4dtu6njfnPGpBbxL_vaNxYMQAzANCQz8ibrxN6-Z_3LeZMehGOe5hmtUdHLWciv7cXh93B-BZfw7I3MAW5ZJtKlcsM_c_GX046Q_8kWhNDhtSUym83w6cfPTqSXBsyoPfXLibC7SC_L8KqyYT7T5aDx1SHcid5vTCxZ4-IdbCjSvUv1Cy59ARMUu9"/>
+</div>
+</div>
+</header>
+<div class="p-gutter max-w-container-max-width mx-auto">
+<!-- Dashboard Header -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Fees &amp; Accounts</h2>
+<p class="text-body-md text-on-surface-variant">Real-time financial health and collection tracking.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline text-label-md font-label-md rounded-lg hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">filter_list</span> Batch: 2024-A
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 border border-outline text-label-md font-label-md rounded-lg hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">calendar_today</span> Last 30 Days
+                    </button>
+</div>
+</div>
+<!-- KPI Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-gutter">
+<!-- Collected Card -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="absolute top-0 left-0 w-full h-1 bg-secondary"></div>
+<div class="flex justify-between items-start mb-4">
+<p class="text-label-md font-label-md text-outline uppercase tracking-wider">Collected</p>
+<span class="material-symbols-outlined text-secondary bg-secondary-container/20 p-2 rounded-lg">payments</span>
+</div>
+<p class="font-display-lg text-display-lg text-on-surface mb-2">$428,500</p>
+<div class="flex items-center gap-1 text-on-secondary-container">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span class="text-label-sm">12% from last month</span>
+</div>
+</div>
+<!-- Pending Card -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
+<div class="flex justify-between items-start mb-4">
+<p class="text-label-md font-label-md text-outline uppercase tracking-wider">Pending</p>
+<span class="material-symbols-outlined text-primary bg-primary-container/10 p-2 rounded-lg">schedule</span>
+</div>
+<p class="font-display-lg text-display-lg text-on-surface mb-2">$84,200</p>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">info</span>
+<span class="text-label-sm">42 students expected today</span>
+</div>
+</div>
+<!-- Overdue Card -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="absolute top-0 left-0 w-full h-1 bg-error"></div>
+<div class="flex justify-between items-start mb-4">
+<p class="text-label-md font-label-md text-outline uppercase tracking-wider">Overdue</p>
+<span class="material-symbols-outlined text-error bg-error-container/20 p-2 rounded-lg">warning</span>
+</div>
+<p class="font-display-lg text-display-lg text-on-surface mb-2">$12,940</p>
+<div class="flex items-center gap-1 text-error">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+<span class="text-label-sm">Critical: 8 major accounts</span>
+</div>
+</div>
+</div>
+<!-- Main Dashboard Layout -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Revenue Trends Chart (Bento Large) -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md">Collection Analytics</h3>
+<div class="flex gap-2">
+<span class="flex items-center gap-1 text-label-sm font-label-sm text-outline">
+<span class="w-3 h-3 rounded-full bg-secondary"></span> Revenue
+                            </span>
+<span class="flex items-center gap-1 text-label-sm font-label-sm text-outline">
+<span class="w-3 h-3 rounded-full bg-primary/40"></span> Target
+                            </span>
+</div>
+</div>
+<!-- Placeholder for Chart -->
+<div class="h-[300px] w-full flex items-end justify-between gap-4 pt-4">
+<!-- Bar chart visualization -->
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full relative">
+<div class="absolute bottom-0 w-full bg-primary/10 rounded-t-sm h-[80%]"></div>
+<div class="relative bg-secondary rounded-t-sm h-[65%] group-hover:h-[70%] transition-all duration-500"></div>
+</div>
+<span class="text-label-sm text-outline">Mon</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full relative">
+<div class="absolute bottom-0 w-full bg-primary/10 rounded-t-sm h-[85%]"></div>
+<div class="relative bg-secondary rounded-t-sm h-[75%] group-hover:h-[80%] transition-all duration-500"></div>
+</div>
+<span class="text-label-sm text-outline">Tue</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full relative">
+<div class="absolute bottom-0 w-full bg-primary/10 rounded-t-sm h-[75%]"></div>
+<div class="relative bg-secondary rounded-t-sm h-[72%] group-hover:h-[78%] transition-all duration-500"></div>
+</div>
+<span class="text-label-sm text-outline">Wed</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full relative">
+<div class="absolute bottom-0 w-full bg-primary/10 rounded-t-sm h-[90%]"></div>
+<div class="relative bg-secondary rounded-t-sm h-[88%] group-hover:h-[92%] transition-all duration-500"></div>
+</div>
+<span class="text-label-sm text-outline">Thu</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full relative">
+<div class="absolute bottom-0 w-full bg-primary/10 rounded-t-sm h-[80%]"></div>
+<div class="relative bg-secondary rounded-t-sm h-[60%] group-hover:h-[65%] transition-all duration-500"></div>
+</div>
+<span class="text-label-sm text-outline">Fri</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full relative">
+<div class="absolute bottom-0 w-full bg-primary/10 rounded-t-sm h-[50%]"></div>
+<div class="relative bg-secondary rounded-t-sm h-[30%] group-hover:h-[35%] transition-all duration-500"></div>
+</div>
+<span class="text-label-sm text-outline">Sat</span>
+</div>
+</div>
+</div>
+<!-- Installments Status (Bento Small) -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant">
+<h3 class="font-headline-md text-headline-md mb-6">Installment Health</h3>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between text-label-md font-label-md mb-2">
+<span>First Quarter</span>
+<span class="text-secondary">94%</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full" style="width: 94%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-label-md font-label-md mb-2">
+<span>Second Quarter</span>
+<span class="text-primary">68%</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full" style="width: 68%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-label-md font-label-md mb-2">
+<span>Final Settlement</span>
+<span class="text-on-surface-variant">12%</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-outline h-full" style="width: 12%"></div>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant mt-2">
+<button class="w-full text-center text-primary font-label-md text-label-md hover:underline">View All Installment Plans</button>
+</div>
+</div>
+</div>
+<!-- Recent Payments Table (Full Width) -->
+<div class="col-span-12 bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md">Payments &amp; Receipts</h3>
+<div class="flex gap-2">
+<button class="bg-primary text-white px-4 py-2 rounded-lg font-label-md text-label-md">Generate Receipt</button>
+<button class="bg-surface-container-high text-on-surface px-4 py-2 rounded-lg font-label-md text-label-md">Export PDF</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low text-label-sm font-label-sm text-outline border-b border-outline-variant">
+<tr>
+<th class="px-6 py-3 uppercase">Receipt ID</th>
+<th class="px-6 py-3 uppercase">Student Name</th>
+<th class="px-6 py-3 uppercase">Batch</th>
+<th class="px-6 py-3 uppercase">Date</th>
+<th class="px-6 py-3 uppercase">Method</th>
+<th class="px-6 py-3 uppercase">Amount</th>
+<th class="px-6 py-3 uppercase">Status</th>
+<th class="px-6 py-3"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant text-body-md">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 font-mono">#VCR-8921</td>
+<td class="px-6 py-4 font-semibold">Alex Rivera</td>
+<td class="px-6 py-4">Data Science 2024</td>
+<td class="px-6 py-4 text-on-surface-variant">Oct 12, 2023</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">credit_card</span> Stripe</span>
+</td>
+<td class="px-6 py-4 font-bold text-secondary">$1,200.00</td>
+<td class="px-6 py-4">
+<span class="bg-secondary/10 text-secondary px-2 py-1 rounded-full text-label-sm">Success</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary">download</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 font-mono">#VCR-8920</td>
+<td class="px-6 py-4 font-semibold">Sarah Jenkins</td>
+<td class="px-6 py-4">UX Design A</td>
+<td class="px-6 py-4 text-on-surface-variant">Oct 11, 2023</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">account_balance</span> Bank Transfer</span>
+</td>
+<td class="px-6 py-4 font-bold text-secondary">$850.00</td>
+<td class="px-6 py-4">
+<span class="bg-secondary/10 text-secondary px-2 py-1 rounded-full text-label-sm">Success</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary">download</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 font-mono">#VCR-8919</td>
+<td class="px-6 py-4 font-semibold">Marcus T.</td>
+<td class="px-6 py-4">Data Science 2024</td>
+<td class="px-6 py-4 text-on-surface-variant">Oct 11, 2023</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">payments</span> Cash</span>
+</td>
+<td class="px-6 py-4 font-bold text-error">$400.00</td>
+<td class="px-6 py-4">
+<span class="bg-error-container/20 text-error px-2 py-1 rounded-full text-label-sm font-semibold">Overdue</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary">notifications_active</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 font-mono">#VCR-8918</td>
+<td class="px-6 py-4 font-semibold">Elena Gilbert</td>
+<td class="px-6 py-4">Product Mgmt</td>
+<td class="px-6 py-4 text-on-surface-variant">Oct 10, 2023</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">credit_card</span> Credit Card</span>
+</td>
+<td class="px-6 py-4 font-bold text-secondary">$1,200.00</td>
+<td class="px-6 py-4">
+<span class="bg-secondary/10 text-secondary px-2 py-1 rounded-full text-label-sm">Success</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary">download</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 bg-surface-container-low border-t border-outline-variant flex justify-center">
+<button class="text-primary font-label-md text-label-md flex items-center gap-1 hover:underline">
+                            Load More Transactions <span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+</div>
+</div>
+<!-- Outstanding Fees Section (Asymmetric Side) -->
+<div class="col-span-12 lg:col-span-12 grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div class="bg-surface-container-highest p-6 rounded-xl border border-primary/20">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">campaign</span>
+<h4 class="font-headline-md text-headline-md text-primary">Auto-Reminders</h4>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<p class="text-body-md text-on-surface-variant mb-4">AI agent is currently scheduled to follow up with 18 overdue accounts tomorrow at 10:00 AM.</p>
+<button class="bg-white text-primary border border-primary px-4 py-2 rounded-lg font-label-md text-label-md w-full">Manage AI Voice Settings</button>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant">
+<h4 class="font-headline-md text-headline-md mb-4">Quick Breakdown</h4>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-3 bg-surface-container-low rounded-lg">
+<p class="text-label-sm text-outline mb-1">Tuition Fees</p>
+<p class="text-headline-md font-bold text-on-surface">$310.2k</p>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg">
+<p class="text-label-sm text-outline mb-1">Registration</p>
+<p class="text-headline-md font-bold text-on-surface">$45.8k</p>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg">
+<p class="text-label-sm text-outline mb-1">Materials</p>
+<p class="text-headline-md font-bold text-on-surface">$12.4k</p>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg">
+<p class="text-label-sm text-outline mb-1">Refunds</p>
+<p class="text-headline-md font-bold text-error">($2.1k)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Decoration / AI Indicator -->
+<div class="fixed bottom-6 right-6 flex items-center gap-3 bg-primary text-white px-4 py-3 rounded-full shadow-2xl z-50 animate-pulse cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">mic</span>
+<div class="flex flex-col">
+<span class="text-label-sm leading-tight">AI VOICE AGENT</span>
+<span class="text-[10px] opacity-80 leading-tight">Listening for commands...</span>
+</div>
+</div>
+</main>
+<script>
+        // Simple Interaction: Tonal Layering on Scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('bg-white', 'shadow-md');
+                header.classList.remove('bg-surface/80');
+            } else {
+                header.classList.remove('bg-white', 'shadow-md');
+                header.classList.add('bg-surface/80');
+            }
+        });
+
+        // Add visual pulsing effect to AI indicator
+        const aiIndicator = document.querySelector('.animate-pulse');
+        aiIndicator.addEventListener('mouseenter', () => {
+            aiIndicator.classList.remove('animate-pulse');
+        });
+        aiIndicator.addEventListener('mouseleave', () => {
+            aiIndicator.classList.add('animate-pulse');
+        });
+    </script>
+</body></html>

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admissions Pipeline | VoiceCRM</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#ffddb8",
+                        "surface": "#faf8ff",
+                        "on-primary-container": "#f8f7ff",
+                        "surface-tint": "#0054d6",
+                        "primary-container": "#0066ff",
+                        "surface-container-low": "#f2f3ff",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#283044",
+                        "on-primary-fixed-variant": "#003fa4",
+                        "surface-container-high": "#e2e7ff",
+                        "on-secondary-fixed": "#002113",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#005236",
+                        "inverse-primary": "#b3c5ff",
+                        "primary": "#0050cb",
+                        "tertiary-container": "#a06500",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "surface-dim": "#d2d9f4",
+                        "outline-variant": "#c2c6d8",
+                        "error": "#ba1a1a",
+                        "surface-container": "#eaedff",
+                        "surface-bright": "#faf8ff",
+                        "secondary-fixed-dim": "#4edea3",
+                        "secondary": "#006c49",
+                        "background": "#faf8ff",
+                        "on-primary-fixed": "#001849",
+                        "secondary-container": "#6cf8bb",
+                        "on-secondary-container": "#00714d",
+                        "inverse-on-surface": "#eef0ff",
+                        "on-tertiary-container": "#fff7f1",
+                        "on-background": "#131b2e",
+                        "on-surface-variant": "#424656",
+                        "primary-fixed-dim": "#b3c5ff",
+                        "surface-variant": "#dae2fd",
+                        "outline": "#727687",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-surface": "#131b2e",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "tertiary": "#7f4f00",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-highest": "#dae2fd",
+                        "secondary-fixed": "#6ffbbe",
+                        "primary-fixed": "#dae1ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "container-max-width": "1440px",
+                        "base": "8px",
+                        "sidebar-width": "240px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "32px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "label-md": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "label-sm": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "label-sm": ["11px", {"lineHeight": "12px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                        "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Geist', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pipeline-column {
+            min-height: calc(100vh - 320px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c2c6d8;
+            border-radius: 10px;
+        }
+        @keyframes pulse-ai {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .ai-active-ring {
+            animation: pulse-ai 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- Side Navigation -->
+<aside class="fixed left-0 top-0 h-full w-[240px] bg-surface-container-low border-r border-outline-variant flex flex-col p-4 gap-2 z-50">
+<div class="flex items-center gap-3 px-2 py-4 mb-4">
+<div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">voice_chat</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">VoiceCRM</h1>
+<p class="font-label-md text-label-md text-on-surface-variant opacity-70">Coaching SaaS</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1 overflow-y-auto custom-scrollbar">
+<!-- Navigation Items from JSON mapping -->
+<a class="flex items-center gap-3 p-3 font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">call</span> Cold Calling
+            </a>
+<a class="flex items-center gap-3 p-3 font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">contact_page</span> Enquiries
+            </a>
+<a class="flex items-center gap-3 p-3 font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">local_fire_department</span> Warm Leads
+            </a>
+<a class="flex items-center gap-3 p-3 font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">event_repeat</span> Follow Ups
+            </a>
+<!-- Active Item: Admissions -->
+<a class="flex items-center gap-3 p-3 font-body-md text-body-md bg-primary-container text-on-primary-container font-bold rounded-lg shadow-sm scale-[0.98] transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person_add</span> Admissions
+            </a>
+<a class="flex items-center gap-3 p-3 font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">rate_review</span> Reviews
+            </a>
+<a class="flex items-center gap-3 p-3 font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">support_agent</span> Student Support
+            </a>
+<a class="flex items-center gap-3 p-3 font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">school</span> Academics
+            </a>
+<a class="flex items-center gap-3 p-3 font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">payments</span> Fees
+            </a>
+<a class="flex items-center gap-3 p-3 font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">forum</span> Communication Hub
+            </a>
+</nav>
+<div class="mt-auto pt-4 space-y-1 border-t border-outline-variant">
+<a class="flex items-center gap-3 p-3 font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span> Settings
+            </a>
+<a class="flex items-center gap-3 p-3 font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">help</span> Help
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[240px] min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 right-0 left-[240px] h-16 bg-surface shadow-sm border-b border-outline-variant flex justify-between items-center px-6 z-40">
+<div class="flex items-center bg-surface-container-low border border-outline-variant rounded-full px-4 py-2 w-96">
+<span class="material-symbols-outlined text-on-surface-variant mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 w-full font-body-md text-body-md" placeholder="Search students, courses, or leads..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors relative">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">help_outline</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
+<div class="flex items-center gap-3 pl-2">
+<div class="text-right hidden md:block">
+<p class="font-label-md text-label-md font-bold">Admin User</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Head of Admissions</p>
+</div>
+<img alt="User Profile" class="w-10 h-10 rounded-full border border-outline-variant object-cover" data-alt="A professional headshot of a middle-aged male administrator with a friendly smile, wearing a modern navy blue suit. The lighting is soft and studio-quality, emphasizing a professional yet approachable persona suitable for a high-end corporate software environment. The background is a clean, neutral grey with a subtle gradient." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6OZ86fzmuzO1e8C2TcJXa-acOdgnyTfAZU0HcltRTvyTIobw6bLwFUiBMD0OlA-EOnuwXJTrkEfYRFdpthX7GKQbkSS6GLxSVcSpAKVXZVwYGoW9yH6OA_tHmEsJYL8nI5nWjJmUY0xqnG2QxDuNM_t8vRUjuZ13UYcpj62985Gz2jtNsDvNzIq9A11rxEK5CXB5av8qhd-6Xwn_I41JrwICiNEnXSzcXCIRZzh5KBQajviCOsESHkwO6U6cXpML_NYiqvgZDjTdD"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="pt-24 px-8 pb-12">
+<!-- Header & KPIs -->
+<div class="mb-10 flex flex-col md:flex-row justify-between items-end gap-6">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Admissions Pipeline</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-lg">Real-time tracking of student enrollments from qualification to admission. AI agents are currently processing 14 active calls.</p>
+</div>
+<div class="flex gap-4">
+<button class="px-5 py-2.5 bg-surface-container-high border border-outline-variant rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined text-[20px]">file_download</span> Export Data
+                    </button>
+<button class="px-5 py-2.5 bg-primary text-on-primary rounded-lg font-label-md text-label-md flex items-center gap-2 hover:shadow-lg active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px]">add</span> New Admission
+                    </button>
+</div>
+</div>
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-10">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
+<div class="flex justify-between items-start mb-4">
+<span class="p-2 bg-primary-container/10 text-primary rounded-lg">
+<span class="material-symbols-outlined">trending_up</span>
+</span>
+<span class="text-secondary font-label-sm text-label-sm">+12% vs LY</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant">Admissions This Month</p>
+<h3 class="font-display-lg text-display-lg mt-1">128</h3>
+<div class="mt-4 flex gap-1 h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-primary w-[75%] rounded-full"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-secondary"></div>
+<div class="flex justify-between items-start mb-4">
+<span class="p-2 bg-secondary-container/10 text-secondary rounded-lg">
+<span class="material-symbols-outlined">group_add</span>
+</span>
+<span class="text-secondary font-label-sm text-label-sm">+4.2%</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant">Conversion Rate</p>
+<h3 class="font-display-lg text-display-lg mt-1">24.5%</h3>
+<p class="mt-4 font-label-sm text-label-sm text-on-surface-variant">840 Qualified Leads</p>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-tertiary"></div>
+<div class="flex justify-between items-start mb-4">
+<span class="p-2 bg-tertiary-container/10 text-tertiary rounded-lg">
+<span class="material-symbols-outlined">payments</span>
+</span>
+<span class="text-primary font-label-sm text-label-sm">High Value</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant">Revenue Generated</p>
+<h3 class="font-display-lg text-display-lg mt-1">$412.5k</h3>
+<p class="mt-4 font-label-sm text-label-sm text-on-surface-variant">Target: $500k</p>
+</div>
+</div>
+<!-- Pipeline Board -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter overflow-x-auto pb-6">
+<!-- Column: Qualified -->
+<div class="flex flex-col gap-4 min-w-[300px]">
+<div class="flex justify-between items-center px-2">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+<h4 class="font-label-md text-label-md font-bold uppercase tracking-wider text-on-surface-variant">Qualified</h4>
+<span class="px-2 py-0.5 bg-surface-container-high rounded text-label-sm font-bold">12</span>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">more_vert</button>
+</div>
+<div class="pipeline-column flex flex-col gap-4 bg-surface-container-low/50 rounded-xl p-2 border border-dashed border-outline-variant">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing group">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2 py-0.5 bg-secondary-container/20 text-secondary text-[10px] font-bold rounded uppercase">Data Science</span>
+<div class="flex items-center gap-1">
+<div class="w-1.5 h-1.5 rounded-full bg-secondary ai-active-ring"></div>
+<span class="text-[10px] text-secondary font-bold">AI ACTIVE</span>
+</div>
+</div>
+<h5 class="font-body-lg text-body-lg font-bold mb-1">Alex Rivers</h5>
+<p class="text-label-sm text-on-surface-variant mb-4 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">call</span> 8 mins ago via AI Agent
+                            </p>
+<div class="flex justify-between items-center border-t border-outline-variant pt-3">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full bg-primary-fixed flex items-center justify-center text-[10px] border border-surface">AR</div>
+</div>
+<button class="p-1 hover:bg-surface-container rounded transition-colors text-primary">
+<span class="material-symbols-outlined text-[18px]">calendar_add_on</span>
+</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 shadow-sm hover:shadow-md transition-all cursor-grab group">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2 py-0.5 bg-primary-container/10 text-primary text-[10px] font-bold rounded uppercase">UX Design</span>
+<span class="text-[10px] text-on-surface-variant">Priority: High</span>
+</div>
+<h5 class="font-body-lg text-body-lg font-bold mb-1">Elena Kostic</h5>
+<p class="text-label-sm text-on-surface-variant mb-4 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">mail</span> Outreach pending
+                            </p>
+<div class="flex justify-between items-center border-t border-outline-variant pt-3">
+<div class="flex -space-x-2">
+<img alt="Assigned To" class="w-6 h-6 rounded-full border border-surface" data-alt="A close-up portrait of a young professional woman with a bright smile and glasses, working in a modern office environment with soft natural lighting and a minimalist background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrrhrosUP9M-uCkCpMzl1pcexEBM2mtNDMC3EkAaTi7fA1OJ1A2ZZL0w-2D24cUOhz3NXDQN7AVPxnEp3-hjhA88elFoGVyaSkwXz-7ZkZNiQrvvmLxR047pBlyAg70zeROSjFOJgawy6ATiSpFkD8vzlNux0wK0anwRUeK-EzjJiX8x1EytGFEahBJc7vuAoQoShJY1uFXJlNB3b1XqKMBuXop9U1bGh893GIuUAtdOxP06Lf3FW1CBIN4--6xwZzT41GJzfbvZ5z"/>
+</div>
+<div class="text-[10px] text-on-surface-variant font-bold">ID: #8921</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Column: Visit Scheduled -->
+<div class="flex flex-col gap-4 min-w-[300px]">
+<div class="flex justify-between items-center px-2">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<h4 class="font-label-md text-label-md font-bold uppercase tracking-wider text-on-surface-variant">Visit Scheduled</h4>
+<span class="px-2 py-0.5 bg-surface-container-high rounded text-label-sm font-bold">5</span>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant">more_vert</button>
+</div>
+<div class="pipeline-column flex flex-col gap-4 bg-surface-container-low/50 rounded-xl p-2 border border-dashed border-outline-variant">
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 shadow-sm hover:shadow-md transition-all cursor-grab group">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2 py-0.5 bg-tertiary-container/20 text-tertiary text-[10px] font-bold rounded uppercase">Full Stack</span>
+<span class="text-[10px] text-error font-bold">TODAY 2:00 PM</span>
+</div>
+<h5 class="font-body-lg text-body-lg font-bold mb-1">Marcus Thorne</h5>
+<p class="text-label-sm text-on-surface-variant mb-4 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Campus Visit (A-Wing)
+                            </p>
+<div class="flex justify-between items-center border-t border-outline-variant pt-3">
+<button class="text-label-sm font-bold text-primary hover:underline" onclick="alert('Recording Visit Outcome...')">Record Outcome</button>
+<div class="w-6 h-6 rounded-full bg-tertiary-fixed flex items-center justify-center text-[10px] border border-surface">MT</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 shadow-sm hover:shadow-md transition-all cursor-grab group">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2 py-0.5 bg-secondary-container/20 text-secondary text-[10px] font-bold rounded uppercase">Data Science</span>
+<span class="text-[10px] text-on-surface-variant">Nov 24, 11:30 AM</span>
+</div>
+<h5 class="font-body-lg text-body-lg font-bold mb-1">Sophia Chen</h5>
+<p class="text-label-sm text-on-surface-variant mb-4 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">video_chat</span> Virtual Tour
+                            </p>
+<div class="flex justify-between items-center border-t border-outline-variant pt-3">
+<div class="flex gap-1">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant opacity-50">attach_file</span>
+<span class="text-[10px] text-on-surface-variant">Doc_Uploaded.pdf</span>
+</div>
+<div class="w-6 h-6 rounded-full overflow-hidden">
+<img alt="Student" data-alt="A close-up high-resolution portrait of a young Asian woman with a professional hairstyle, wearing a simple white blouse, with soft, directional lighting against a blurred office background, embodying a student or young professional profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC39o0Mf3TyDchfKBnIuxYfe2C_CX49_4QpewEt7IOgSjnAzdfGVm0yGSjB4NkbIgcB8f2CRPcza6HGILqImW7ELJFWNdkPQJMVm2ghA-MNisvGT2-shGlva6zHjIrsVxeiTwfkSK2tml6hvMLB2ycSdG8P3UkFeqUQQrs29GJRn2c6UZ3Wwc-MnrCIp5P8MaagMWVzspnPsT2yjM7Sm09zo-XVCUGUnxCXSKkoxfXO2nOdO6qetHDfoAHr-3Vy_pjZdd1qlgT0VVvz"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Column: Admission Pending -->
+<div class="flex flex-col gap-4 min-w-[300px]">
+<div class="flex justify-between items-center px-2">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<h4 class="font-label-md text-label-md font-bold uppercase tracking-wider text-on-surface-variant">Admission Pending</h4>
+<span class="px-2 py-0.5 bg-surface-container-high rounded text-label-sm font-bold">8</span>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant">more_vert</button>
+</div>
+<div class="pipeline-column flex flex-col gap-4 bg-surface-container-low/50 rounded-xl p-2 border border-dashed border-outline-variant">
+<!-- Card 5 (Actionable) -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 shadow-sm hover:shadow-md transition-all border-l-4 border-l-primary group">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2 py-0.5 bg-primary-container/10 text-primary text-[10px] font-bold rounded uppercase">Cyber Security</span>
+<span class="flex items-center gap-1 text-[10px] text-error font-bold">
+<span class="material-symbols-outlined text-[12px]">warning</span> Fees Unpaid
+                                </span>
+</div>
+<h5 class="font-body-lg text-body-lg font-bold mb-1">Jordan Smith</h5>
+<p class="text-label-sm text-on-surface-variant mb-4">Awaiting document verification and initial deposit for Cohort 2024.</p>
+<div class="flex flex-col gap-2 pt-3 border-t border-outline-variant">
+<button class="w-full py-2 bg-primary text-on-primary rounded font-label-sm text-label-sm hover:opacity-90 transition-opacity">Generate Fee Plan</button>
+<button class="w-full py-2 border border-outline text-on-surface-variant rounded font-label-sm text-label-sm hover:bg-surface-container transition-colors">Verify Docs</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Column: Admitted -->
+<div class="flex flex-col gap-4 min-w-[300px]">
+<div class="flex justify-between items-center px-2">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<h4 class="font-label-md text-label-md font-bold uppercase tracking-wider text-on-surface-variant">Admitted</h4>
+<span class="px-2 py-0.5 bg-surface-container-high rounded text-label-sm font-bold">42</span>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant">more_vert</button>
+</div>
+<div class="pipeline-column flex flex-col gap-4 bg-surface-container-low/50 rounded-xl p-2 border border-dashed border-outline-variant">
+<!-- Card 6 -->
+<div class="bg-secondary-container/5 border border-secondary/30 rounded-lg p-4 shadow-sm hover:shadow-md transition-all group">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2 py-0.5 bg-secondary-container/30 text-secondary text-[10px] font-bold rounded uppercase">AI &amp; ML</span>
+<span class="material-symbols-outlined text-secondary text-[18px]">verified</span>
+</div>
+<h5 class="font-body-lg text-body-lg font-bold mb-1">Isabella Vane</h5>
+<p class="text-label-sm text-on-surface-variant mb-4">Fully enrolled. Welcome kit sent via AI Voice Agent.</p>
+<div class="flex justify-between items-center border-t border-outline-variant pt-3">
+<div class="text-[10px] font-bold text-secondary">PAID: $12,500</div>
+<div class="w-6 h-6 rounded-full bg-secondary text-on-secondary flex items-center justify-center text-[10px]">IV</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- AI Status Toast (Micro-interaction) -->
+<div class="fixed bottom-8 right-8 bg-inverse-surface text-inverse-on-surface px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4 border border-outline transform transition-all translate-y-0 opacity-100" id="ai-toast">
+<div class="relative">
+<div class="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary ai-active-ring">settings_suggest</span>
+</div>
+</div>
+<div>
+<p class="font-label-md text-label-md font-bold">AI Agent Processing</p>
+<p class="font-label-sm text-label-sm opacity-70">Synthesizing visit notes for 3 leads...</p>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-white transition-colors" onclick="this.parentElement.style.opacity='0'; setTimeout(()=&gt;this.parentElement.remove(), 500)">close</button>
+</div>
+</main>
+<!-- Visit Outcome Modal (Hidden by default) -->
+<div class="hidden fixed inset-0 bg-on-background/40 backdrop-blur-sm z-[60] flex items-center justify-center p-4" id="visit-modal">
+<div class="bg-surface-container-lowest w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md">Record Visit Outcome</h3>
+<button class="material-symbols-outlined" onclick="toggleModal('visit-modal')">close</button>
+</div>
+<div class="p-6 space-y-4">
+<div>
+<label class="font-label-md text-label-md block mb-1">Student Mood/Interest</label>
+<div class="flex gap-2">
+<button class="flex-1 py-2 rounded-lg border border-outline-variant hover:border-primary hover:text-primary transition-all flex flex-col items-center">
+<span class="material-symbols-outlined">sentiment_very_satisfied</span>
+<span class="text-[10px] font-bold">Hot</span>
+</button>
+<button class="flex-1 py-2 rounded-lg border border-outline-variant hover:border-primary hover:text-primary transition-all flex flex-col items-center">
+<span class="material-symbols-outlined">sentiment_neutral</span>
+<span class="text-[10px] font-bold">Warm</span>
+</button>
+<button class="flex-1 py-2 rounded-lg border border-outline-variant hover:border-primary hover:text-primary transition-all flex flex-col items-center">
+<span class="material-symbols-outlined">sentiment_very_dissatisfied</span>
+<span class="text-[10px] font-bold">Cold</span>
+</button>
+</div>
+</div>
+<div>
+<label class="font-label-md text-label-md block mb-1">Key Concerns Mentioned</label>
+<textarea class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 font-body-md text-body-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none" placeholder="e.g. Finance, Placement history, etc." rows="3"></textarea>
+</div>
+<div class="flex items-center gap-2 py-2">
+<input class="w-4 h-4 text-primary bg-surface-container-low border-outline-variant rounded focus:ring-primary" id="ai-summary" type="checkbox"/>
+<label class="font-body-md text-body-md text-on-surface-variant" for="ai-summary">Generate AI follow-up script</label>
+</div>
+</div>
+<div class="p-6 bg-surface-container-low flex gap-3">
+<button class="flex-1 py-2.5 font-label-md text-label-md border border-outline text-on-surface-variant rounded-lg hover:bg-surface-container-high transition-colors" onclick="toggleModal('visit-modal')">Cancel</button>
+<button class="flex-1 py-2.5 font-label-md text-label-md bg-primary text-on-primary rounded-lg shadow-sm hover:shadow-md transition-all">Save &amp; Update Pipeline</button>
+</div>
+</div>
+</div>
+<script>
+        function toggleModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.toggle('hidden');
+        }
+
+        // Mock simple drag interaction visual (no full library)
+        document.querySelectorAll('.pipeline-column div[cursor-grab]').forEach(card => {
+            card.addEventListener('mousedown', () => card.classList.add('scale-95', 'opacity-80'));
+            card.addEventListener('mouseup', () => card.classList.remove('scale-95', 'opacity-80'));
+        });
+
+        // Toggle the modal on specific card click
+        document.querySelector('[onclick*="alert"]').onclick = function(e) {
+            e.preventDefault();
+            toggleModal('visit-modal');
+        };
+    </script>
+</body></html>

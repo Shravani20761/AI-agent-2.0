@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reviews &amp; Referrals | VoiceCRM</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Geist', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(218, 226, 253, 1);
+        }
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .loading-shimmer {
+            background: linear-gradient(90deg, transparent, rgba(0, 80, 203, 0.05), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "tertiary-fixed": "#ffddb8",
+                "surface": "#faf8ff",
+                "on-primary-container": "#f8f7ff",
+                "surface-tint": "#0054d6",
+                "primary-container": "#0066ff",
+                "surface-container-low": "#f2f3ff",
+                "on-primary": "#ffffff",
+                "on-error-container": "#93000a",
+                "inverse-surface": "#283044",
+                "on-primary-fixed-variant": "#003fa4",
+                "surface-container-high": "#e2e7ff",
+                "on-secondary-fixed": "#002113",
+                "on-error": "#ffffff",
+                "on-secondary-fixed-variant": "#005236",
+                "inverse-primary": "#b3c5ff",
+                "primary": "#0050cb",
+                "tertiary-container": "#a06500",
+                "tertiary-fixed-dim": "#ffb95f",
+                "surface-dim": "#d2d9f4",
+                "outline-variant": "#c2c6d8",
+                "error": "#ba1a1a",
+                "surface-container": "#eaedff",
+                "surface-bright": "#faf8ff",
+                "secondary-fixed-dim": "#4edea3",
+                "secondary": "#006c49",
+                "background": "#faf8ff",
+                "on-primary-fixed": "#001849",
+                "secondary-container": "#6cf8bb",
+                "on-secondary-container": "#00714d",
+                "inverse-on-surface": "#eef0ff",
+                "on-tertiary-container": "#fff7f1",
+                "on-background": "#131b2e",
+                "on-surface-variant": "#424656",
+                "primary-fixed-dim": "#b3c5ff",
+                "surface-variant": "#dae2fd",
+                "outline": "#727687",
+                "error-container": "#ffdad6",
+                "surface-container-lowest": "#ffffff",
+                "on-secondary": "#ffffff",
+                "on-tertiary-fixed": "#2a1700",
+                "on-surface": "#131b2e",
+                "on-tertiary-fixed-variant": "#653e00",
+                "tertiary": "#7f4f00",
+                "on-tertiary": "#ffffff",
+                "surface-container-highest": "#dae2fd",
+                "secondary-fixed": "#6ffbbe",
+                "primary-fixed": "#dae1ff"
+              },
+              "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+              },
+              "fontFamily": {
+                "body-lg": ["Geist"], "headline-md": ["Geist"], "label-md": ["Geist"], "headline-lg": ["Geist"], "label-sm": ["Geist"], "display-lg": ["Geist"], "body-md": ["Geist"]
+              },
+              "fontSize": {
+                "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                "label-sm": ["11px", {"lineHeight": "12px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+                "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface overflow-x-hidden">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full w-[240px] bg-surface-container-low dark:bg-inverse-surface border-r border-outline-variant dark:border-outline flex flex-col p-4 gap-2 z-50">
+<div class="mb-6 flex items-center gap-3 px-2">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[20px]">call</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim leading-none">VoiceCRM</h1>
+<p class="text-[10px] text-on-surface-variant font-medium">Coaching SaaS</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 p-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">call</span> Cold Calling
+            </a>
+<a class="flex items-center gap-3 p-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">contact_page</span> Enquiries
+            </a>
+<a class="flex items-center gap-3 p-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">local_fire_department</span> Warm Leads
+            </a>
+<a class="flex items-center gap-3 p-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">event_repeat</span> Follow Ups
+            </a>
+<a class="flex items-center gap-3 p-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">person_add</span> Admissions
+            </a>
+<a class="flex items-center gap-3 p-2 bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary font-bold rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">rate_review</span> Reviews
+            </a>
+<a class="flex items-center gap-3 p-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">support_agent</span> Student Support
+            </a>
+<a class="flex items-center gap-3 p-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">school</span> Academics
+            </a>
+<a class="flex items-center gap-3 p-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">payments</span> Fees
+            </a>
+<a class="flex items-center gap-3 p-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">forum</span> Communication Hub
+            </a>
+</nav>
+<button class="mt-4 bg-primary text-white py-2 px-4 rounded-lg font-bold font-body-md text-body-md active:scale-[0.98] transition-all">
+            New Enquiry
+        </button>
+<div class="mt-auto border-t border-outline-variant pt-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 p-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">settings</span> Settings
+            </a>
+<a class="flex items-center gap-3 p-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">help</span> Help
+            </a>
+</div>
+</aside>
+<!-- Top Bar -->
+<header class="fixed top-0 right-0 left-[240px] h-16 bg-surface dark:bg-surface-container-lowest border-b border-outline-variant dark:border-outline flex justify-between items-center px-6 z-40 shadow-sm">
+<div class="flex items-center gap-4 w-1/3">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 font-body-md text-body-md focus:ring-1 focus:ring-primary outline-none" placeholder="Search reviews or referrals..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="relative text-on-surface-variant hover:text-primary transition-opacity active:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-opacity active:opacity-80">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-outline-variant"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="font-label-md text-label-md font-bold text-on-surface">Alex Rivera</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">Admin</p>
+</div>
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCcupak2zI4uMnCX8OfM8VTvrAbHTc5-OvfXmSLaFNNUB9WgolYi7-RKcbqEpfziv_QvLutNfISApShyANzCF09bJob7aKFwamb3zjIGvm3r-Po7aYgO2gmygQOnTFD66SBVLKwyNRKfATPYK2l0oKtnK8DGFxcIjbdGS9J8bRKCyWbfoRoQXtml027vymZS6uCRHuzsogtQllvF2DZK1kXvW5cd_XL0Czd91dQ17vcoYrEhqZq3uvyBkQP-Yst8SY83pfTvviIn-D"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-[240px] pt-16 p-8 min-h-screen bg-surface">
+<!-- Welcome & AI Header -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="font-display-lg text-display-lg text-on-surface mb-1">Reviews &amp; Referrals</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Manage your social proof and incentive programs with AI insights.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 bg-surface-container-high px-4 py-2 rounded-lg font-body-md text-body-md text-on-surface active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[18px]">download</span> Export Report
+                </button>
+<button class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg font-body-md text-body-md font-bold active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[18px]">add</span> Campaign
+                </button>
+</div>
+</div>
+<!-- KPI Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-t-4 border-primary">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-2">Review Requests</p>
+<div class="flex items-baseline gap-2">
+<h3 class="font-display-lg text-display-lg text-on-surface">1,284</h3>
+<span class="font-label-sm text-label-sm text-secondary flex items-center">
+<span class="material-symbols-outlined text-[12px]">arrow_upward</span> 12%
+                    </span>
+</div>
+<p class="text-[11px] text-on-surface-variant mt-2">Active this month</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-t-4 border-secondary">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-2">Reviews Received</p>
+<div class="flex items-baseline gap-2">
+<h3 class="font-display-lg text-display-lg text-on-surface">432</h3>
+<span class="font-label-sm text-label-sm text-secondary flex items-center">
+<span class="material-symbols-outlined text-[12px]">arrow_upward</span> 8.4%
+                    </span>
+</div>
+<p class="text-[11px] text-on-surface-variant mt-2">33.6% conversion rate</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-t-4 border-tertiary">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-2">Referrals Generated</p>
+<div class="flex items-baseline gap-2">
+<h3 class="font-display-lg text-display-lg text-on-surface">156</h3>
+<span class="font-label-sm text-label-sm text-error flex items-center">
+<span class="material-symbols-outlined text-[12px]">arrow_downward</span> 2%
+                    </span>
+</div>
+<p class="text-[11px] text-on-surface-variant mt-2">Qualified leads only</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-t-4 border-primary-container">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-2">Admissions from Ref</p>
+<div class="flex items-baseline gap-2">
+<h3 class="font-display-lg text-display-lg text-on-surface">42</h3>
+<span class="font-label-sm text-label-sm text-secondary flex items-center">
+<span class="material-symbols-outlined text-[12px]">arrow_upward</span> 24%
+                    </span>
+</div>
+<p class="text-[11px] text-on-surface-variant mt-2">$84,000 Revenue generated</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+<!-- Referral Success Chart (Asymmetric) -->
+<div class="lg:col-span-2 bg-surface-container-lowest p-6 rounded-xl shadow-sm flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h4 class="font-headline-md text-headline-md text-on-surface">Referral Growth Analytics</h4>
+<select class="bg-surface-container px-3 py-1 rounded-full font-label-md text-label-md border-none outline-none focus:ring-1 focus:ring-primary">
+<option>Last 6 Months</option>
+<option>Last 30 Days</option>
+</select>
+</div>
+<div class="flex-1 min-h-[250px] relative">
+<!-- Placeholder Chart Visualization -->
+<div class="absolute inset-0 flex items-end justify-between px-4 pb-2">
+<div class="w-12 bg-primary-container/20 rounded-t-lg h-[40%]"></div>
+<div class="w-12 bg-primary-container/30 rounded-t-lg h-[55%]"></div>
+<div class="w-12 bg-primary-container/40 rounded-t-lg h-[45%]"></div>
+<div class="w-12 bg-primary-container/60 rounded-t-lg h-[70%]"></div>
+<div class="w-12 bg-primary-container/80 rounded-t-lg h-[85%]"></div>
+<div class="w-12 bg-primary rounded-t-lg h-[95%]"></div>
+</div>
+<!-- Legend -->
+<div class="absolute top-0 right-0 flex gap-4">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 bg-primary rounded-full"></span>
+<span class="text-[10px] text-on-surface-variant font-medium">Qualified</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 bg-primary-container/40 rounded-full"></span>
+<span class="text-[10px] text-on-surface-variant font-medium">Pending</span>
+</div>
+</div>
+</div>
+<div class="flex justify-between mt-4 px-4 text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">
+<span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
+</div>
+</div>
+<!-- AI Insight Widget -->
+<div class="bg-primary-container text-white p-6 rounded-xl shadow-lg relative overflow-hidden flex flex-col">
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-[20px] animate-pulse">auto_awesome</span>
+<h4 class="font-headline-md text-headline-md">AI Opportunity</h4>
+</div>
+<p class="font-body-md text-body-md mb-6 opacity-90">Based on recent student performance, 12 students in the "Advanced Academics" track are highly likely to provide a 5-star review if asked today.</p>
+<button class="w-full bg-white text-primary font-bold py-3 rounded-xl shadow-sm hover:bg-surface-bright transition-colors active:scale-[0.98]">
+                        Automate Outreach
+                    </button>
+</div>
+<!-- Abstract visual element -->
+<div class="absolute -bottom-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
+<div class="absolute top-10 -left-10 w-24 h-24 bg-white/5 rounded-full blur-2xl"></div>
+</div>
+</div>
+<!-- Main Tracking Section -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<!-- Review Tracking Table -->
+<div class="xl:col-span-2 bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h4 class="font-headline-md text-headline-md text-on-surface">Recent Reviews &amp; Status</h4>
+<div class="flex gap-2">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low">
+<th class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Student</th>
+<th class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Course</th>
+<th class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Incentive</th>
+<th class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center font-bold text-primary text-[12px]">JD</div>
+<div>
+<p class="font-body-md text-body-md font-bold text-on-surface">Jordan Davis</p>
+<p class="text-[10px] text-on-surface-variant">2 days ago</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md">Data Science Pro</td>
+<td class="px-6 py-4">
+<span class="font-body-md text-body-md">$50 Amazon Voucher</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-secondary/10 text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Completed
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<button class="text-primary hover:underline font-label-md text-label-md">View Review</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center font-bold text-primary text-[12px]">SL</div>
+<div>
+<p class="font-body-md text-body-md font-bold text-on-surface">Sarah Lopez</p>
+<p class="text-[10px] text-on-surface-variant">5 hours ago</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md">UX Bootcamp</td>
+<td class="px-6 py-4">
+<span class="font-body-md text-body-md">Free Career Coach Session</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-tertiary/10 text-tertiary">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Pending
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<button class="text-primary hover:underline font-label-md text-label-md">Resend Link</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center font-bold text-primary text-[12px]">MT</div>
+<div>
+<p class="font-body-md text-body-md font-bold text-on-surface">Marcus Thorne</p>
+<p class="text-[10px] text-on-surface-variant">Yesterday</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md">Full-Stack Dev</td>
+<td class="px-6 py-4">
+<span class="font-body-md text-body-md">$25 Rebate</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-primary/10 text-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Incentivized
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<button class="text-primary hover:underline font-label-md text-label-md">Review Data</button>
+</td>
+</tr>
+<!-- Loading State Row Placeholder -->
+<tr class="loading-row">
+<td class="px-6 py-4" colspan="5">
+<div class="flex items-center gap-3 loading-shimmer h-12 rounded-lg"></div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-outline-variant flex justify-center">
+<button class="font-label-md text-label-md text-primary font-bold hover:bg-primary-container/10 px-4 py-2 rounded-lg">Load More Records</button>
+</div>
+</div>
+<!-- Referral Tracking List -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col h-full">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<h4 class="font-headline-md text-headline-md text-on-surface">Top Referrers</h4>
+<span class="material-symbols-outlined text-primary">workspace_premium</span>
+</div>
+<div class="p-4 flex flex-col gap-4 overflow-y-auto max-h-[500px]">
+<!-- Referrer Card -->
+<div class="p-4 border border-outline-variant rounded-xl hover:border-primary transition-all group">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-3">
+<img alt="Referrer" class="w-10 h-10 rounded-full border-2 border-primary" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmkGrfrg17rTtT7ZUxBq2CZMlwfAJsv1xQrCY44DOhv-EBlY5bcEkE0GW25WIq3ojZODa5TA9L4RpYCxtxKrKkZGC8VXOR7O_TWQvZsGkTkUAxOynT6vL6gGuqq-oIsErssotlxwqh8_huTuCwvl9bkQThTrEGfNHs8SMGb03X3uLgD6qqTgIFHZl6viZ4uVw5e-BLAiDZ0WXoIHwKyQejXQRBixwFjs9ht8rDJ6LODV8QG4fQrx1UkFJtfymKTrwPnzPEFAzufySq"/>
+<div>
+<p class="font-body-md text-body-md font-bold">Elena Gilbert</p>
+<p class="text-[10px] text-on-surface-variant">Silver Tier Referrer</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-headline-md text-primary">12</p>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase">Referrals</p>
+</div>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2 mb-2">
+<div class="bg-primary h-2 rounded-full w-[80%]"></div>
+</div>
+<div class="flex justify-between items-center text-[10px] font-bold">
+<span class="text-on-surface-variant">Next Reward: $200 Bonus</span>
+<span class="text-primary">80% to Gold</span>
+</div>
+</div>
+<!-- Referrer Card -->
+<div class="p-4 border border-outline-variant rounded-xl hover:border-primary transition-all">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-3">
+<img alt="Referrer" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsOm3DDO39O3dzbZx_7CKeln4DPKbyIbRR21OVSMM7eRgLQcpyPI8z4u4XYRQViuAoHLSjj_lrMIFTx3G7VgLBIdoAMiCNR4DQmkD9c4jMh5Yfvilk0N4-t7OrF5Xb3KSZj4x18ABXrEy5NVE1KEf8t6AgCp6zbG-2sUZBlg_hPt7e3ct_tVo_Lt6qdWNwI203OL50405YW97vv-Wj26I-nYtuFbH0oH9gnL1cp0V46mY44Uj6Ud1di-6Okv0hrCN9-aNMmGdMtRKB"/>
+<div>
+<p class="font-body-md text-body-md font-bold">David Chen</p>
+<p class="text-[10px] text-on-surface-variant">Bronze Tier Referrer</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-headline-md text-on-surface">8</p>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase">Referrals</p>
+</div>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2 mb-2">
+<div class="bg-primary h-2 rounded-full w-[45%]"></div>
+</div>
+<div class="flex justify-between items-center text-[10px] font-bold">
+<span class="text-on-surface-variant">Next Reward: Course Discount</span>
+<span class="text-primary">45% to Silver</span>
+</div>
+</div>
+<!-- Referrer Card -->
+<div class="p-4 border border-outline-variant rounded-xl hover:border-primary transition-all">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-3">
+<img alt="Referrer" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMU5bU5DGMwgiR6WjgnCxX6T05YlL8tmpE6EbmRYY7lCq-r8MJfVsLAGlTXViJW6B4fJStDf6fyg3qkQjnbCAL1w_P8y5my00PPXenRl8gCSn4udfkW2vln1uveJGsmWZFLYmmAE6scPko2tFRShayLiRzFobGrJpl5uXkdlupKhxcdfyBUJ98-Iwcxdtm4dIsvCHh6dPqBGMf09Z18Q3cfiQyWUmrufZIky_j4UO58Wx_PaYbJww319OGAH_9gXNI1OYt11LYZsZn"/>
+<div>
+<p class="font-body-md text-body-md font-bold">Sophia Williams</p>
+<p class="text-[10px] text-on-surface-variant">New Advocate</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-headline-md text-on-surface">3</p>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase">Referrals</p>
+</div>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2 mb-2">
+<div class="bg-primary h-2 rounded-full w-[15%]"></div>
+</div>
+<div class="flex justify-between items-center text-[10px] font-bold">
+<span class="text-on-surface-variant">First Reward: Swag Kit</span>
+<span class="text-primary">15% to Bronze</span>
+</div>
+</div>
+</div>
+<div class="mt-auto p-6 bg-surface-container-high">
+<div class="flex items-center gap-4">
+<div class="flex-1">
+<p class="font-label-md text-label-md font-bold text-on-surface">Overall Program ROI</p>
+<p class="text-[10px] text-on-surface-variant">Referral costs vs. Lifetime value</p>
+</div>
+<div class="px-3 py-1 bg-secondary text-white font-bold rounded-full text-[12px]">4.2x</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating UI Notification -->
+<div class="fixed bottom-8 right-8 flex items-center gap-4 bg-inverse-surface text-inverse-on-surface p-4 rounded-xl shadow-2xl translate-y-20 transition-transform duration-500 z-[100] border border-outline/20" id="toast">
+<span class="material-symbols-outlined text-secondary-fixed">check_circle</span>
+<div class="pr-8">
+<p class="font-label-md text-label-md font-bold">Success!</p>
+<p class="text-[11px] opacity-80">12 AI outreach emails have been sent to eligible students.</p>
+</div>
+<button class="absolute top-2 right-2 text-inverse-on-surface/50 hover:text-inverse-on-surface" onclick="closeToast()">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        // Simple Toast Notification Logic
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.remove('translate-y-20');
+            }, 2000);
+        });
+
+        function closeToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('translate-y-40');
+        }
+
+        // Simulate a "Loading" finish for the table
+        setTimeout(() => {
+            const loadingRow = document.querySelector('.loading-row');
+            if (loadingRow) {
+                loadingRow.style.display = 'none';
+            }
+        }, 4000);
+    </script>
+<!-- Semantic Hidden Metadata for Images -->
+<div class="hidden">
+<img data-alt="A portrait photograph of a young woman with a professional smile, set against a clean studio background. The lighting is soft and high-key, creating a modern and approachable look. She has dark hair and wears business casual attire. The image style is crisp and corporate-minimalist, fitting into a clean high-end CRM dashboard aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAVE17CsdoU6Eaf8rnfAvFHF12eX66v2uM5b9zUAxoOVw1oiZdlGb__QfZCrfVQ5eS8M8Qkg_ARBrYjynb05mcS_-0g1JqJvEjpZJslTS6wfjlMjJSOc4bfftdxGHZNgS1K8G0RdgYF6Uwce9uOM9-MUmjCb2mlsVyEz6Vfk7aTBFm3WOKF_BSefuUV3-3Suhunwo0hrcDkN7WYpqgyp4xBaEj_t0p8ykSBOc0siiCLHryZo_yVujadreKx_cEsmBoUtGaQgpar1na"/>
+<img data-alt="A sharp, clean portrait of a young professional Asian man wearing glasses, looking confidently at the camera. The background is a blurred office setting with cool blue tones. High-end professional lighting emphasizes detail and clarity. This image is used as a user profile in a technical CRM software environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkJQ0l_f4YhScWcKK7lIGyv6WCqHqhaZEoZXs2JDMbYkN54_94qOOGlfEu0v2af_Sl_6Zu7X6JpX421VdoL4sc661ReYLOe2ydJSqJ_kmvQcHQ17cMXbtVHeDy53irtcvV6qgt11wIGPgzYE4QWkEbQQo1XEILk6wpTEMc9E5Podu8PXICF3lq8iLqsgE8hACc46WRPnMVr4xhE18VicxzZc70p-HNx_DbZupeb9imEeEgQ40Bo95IT0Y5YPjH8N-PoSo8UB4vNy5T"/>
+<img data-alt="A professional headshot of a woman with a bright, welcoming expression in a modern coworking space. The sunlight is natural and flattering, filtering through large windows in the background. The visual tone is light, airy, and sophisticated, echoing a modern software design language with soft shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCX-FMavZoIrPbsWGYOVUVB7FWyFylW2_BZYH4nENER54fIr2c309kmF98Wqn4IQoT3KKg8sND6VQVmLYlhklvMeaum09LW1GrPrJ38082lYlq9wDnpwNJ_GQ2ss2u66cZnFKMPbheN4T8p1Vr-ZqT6GqdfBqt5qdqyTydAoosXEVesYuVZpETc1qTygao_Wu1koULzUfXiI2wrxBVsbBFA8Fvy5AyaGntXVsD5yQd3JRisGncPJuLtJD_y6WcEQkHBQzYdolu1xgZ"/>
+</div>
+</body></html>

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Follow Ups | VoiceCRM</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Geist', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c2c6d8;
+            border-radius: 10px;
+        }
+
+        .glass-card {
+            background: rgba(250, 248, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid #c2c6d8;
+        }
+
+        .task-row:hover .check-ring {
+            border-color: #0050cb;
+        }
+
+        .active-dot {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "outline": "#727687",
+                      "on-tertiary-fixed-variant": "#653e00",
+                      "tertiary-fixed-dim": "#ffb95f",
+                      "on-surface": "#131b2e",
+                      "tertiary": "#7f4f00",
+                      "surface-container-high": "#e2e7ff",
+                      "inverse-on-surface": "#eef0ff",
+                      "outline-variant": "#c2c6d8",
+                      "on-secondary-fixed": "#002113",
+                      "secondary-container": "#6cf8bb",
+                      "on-error": "#ffffff",
+                      "primary-container": "#0066ff",
+                      "error-container": "#ffdad6",
+                      "surface-bright": "#faf8ff",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "on-background": "#131b2e",
+                      "background": "#faf8ff",
+                      "on-tertiary-fixed": "#2a1700",
+                      "on-secondary-fixed-variant": "#005236",
+                      "on-primary-fixed-variant": "#003fa4",
+                      "on-tertiary-container": "#fff7f1",
+                      "surface-variant": "#dae2fd",
+                      "on-secondary-container": "#00714d",
+                      "tertiary-container": "#a06500",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed-dim": "#4edea3",
+                      "surface-container": "#eaedff",
+                      "surface": "#faf8ff",
+                      "secondary-fixed": "#6ffbbe",
+                      "on-error-container": "#93000a",
+                      "primary-fixed-dim": "#b3c5ff",
+                      "on-primary": "#ffffff",
+                      "on-surface-variant": "#424656",
+                      "surface-tint": "#0054d6",
+                      "inverse-primary": "#b3c5ff",
+                      "tertiary-fixed": "#ffddb8",
+                      "primary-fixed": "#dae1ff",
+                      "on-primary-container": "#f8f7ff",
+                      "surface-container-low": "#f2f3ff",
+                      "error": "#ba1a1a",
+                      "inverse-surface": "#283044",
+                      "surface-container-highest": "#dae2fd",
+                      "on-primary-fixed": "#001849",
+                      "surface-dim": "#d2d9f4",
+                      "secondary": "#006c49",
+                      "primary": "#0050cb"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-desktop": "32px",
+                      "sidebar-width": "240px",
+                      "margin-mobile": "16px",
+                      "gutter": "24px",
+                      "container-max-width": "1440px",
+                      "base": "8px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Geist"],
+                      "label-sm": ["Geist"],
+                      "label-md": ["Geist"],
+                      "display-lg": ["Geist"],
+                      "body-md": ["Geist"],
+                      "body-lg": ["Geist"],
+                      "headline-lg": ["Geist"]
+              },
+              "fontSize": {
+                      "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "label-sm": ["11px", {"lineHeight": "12px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                      "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                      "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background overflow-hidden">
+<!-- Sidebar Wrapper -->
+<aside class="fixed left-0 top-0 h-full w-[240px] bg-surface-container-low border-r border-outline-variant flex flex-col p-4 gap-2 z-50">
+<div class="flex items-center gap-3 mb-6 px-2">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[20px]">call</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">VoiceCRM</h1>
+<p class="font-label-md text-label-md text-on-surface-variant opacity-70">Coaching SaaS</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1 overflow-y-auto custom-scrollbar">
+<!-- Navigation Items from JSON -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">call</span> Cold Calling
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">contact_page</span> Enquiries
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">local_fire_department</span> Warm Leads
+            </a>
+<!-- Active Navigation -->
+<a class="flex items-center gap-3 px-3 py-2 bg-primary-container text-on-primary-container font-bold rounded-lg transition-all scale-[0.98] font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">event_repeat</span> Follow Ups
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">person_add</span> Admissions
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">rate_review</span> Reviews
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">support_agent</span> Student Support
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">school</span> Academics
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">payments</span> Fees
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">forum</span> Communication Hub
+            </a>
+</nav>
+<div class="pt-4 border-t border-outline-variant flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">settings</span> Settings
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">help</span> Help
+            </a>
+</div>
+</aside>
+<!-- Top Bar -->
+<header class="fixed top-0 right-0 left-[240px] h-16 bg-surface shadow-sm border-b border-outline-variant z-40 flex items-center justify-between px-6">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-body-md focus:ring-2 focus:ring-primary" placeholder="Search follow-ups or leads..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">help_outline</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary-fixed-dim overflow-hidden ml-2 ring-1 ring-outline-variant">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A close-up portrait of a professional male CRM manager in his late 20s, looking directly at the camera with a confident and approachable expression. The lighting is soft and natural, emphasizing clean features against a blurred modern office background with high-key lighting. The aesthetic is professional, minimalist, and perfectly aligned with a corporate SaaS environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1CE0KsgxRjUxOOtMV3EBbdZKy0pWB2SrlxawLYRq-bvRhvSqY9YnRqt2BATDdBf9geXWxHigOfpsCZZ1NgAZBnXtR54yUTPFXioN8ICJOQCmp5cHb3tjkU2IzAEXxIAUyeXB9dYDNC-WUxEbGPE-4qAoZRGhqsFWnqhlIN48qbce__i04T1R4bXHs3WYLjDLyOYcnadekz45M5_Rb4T2wcKBM4D3avCEeh4fiRFX29CrEzjzlqL-e0WiYtnVfa5LGUOqrhPDPJAie"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-[240px] mt-16 p-6 h-[calc(100vh-64px)] overflow-hidden flex flex-col gap-6">
+<!-- Action Header -->
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<h2 class="font-headline-lg text-headline-lg text-on-background">Follow-Ups Queue</h2>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="text-label-md font-label-md">12 Urgent Actions Required</span>
+<span class="w-1.5 h-1.5 rounded-full bg-error active-dot"></span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="bg-surface-container border border-outline-variant rounded-lg p-1 flex">
+<button class="px-4 py-1.5 rounded-md bg-surface text-primary font-bold shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">list</span>
+<span class="font-label-md">List</span>
+</button>
+<button class="px-4 py-1.5 rounded-md text-on-surface-variant hover:bg-surface-container-high flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span>
+<span class="font-label-md">Calendar</span>
+</button>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow-md">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                    New Enquiry
+                </button>
+</div>
+</div>
+<!-- Filter & Tabs Row -->
+<div class="flex items-center justify-between border-b border-outline-variant">
+<div class="flex gap-8">
+<button class="pb-3 border-b-2 border-primary text-primary font-bold font-label-md">Admissions</button>
+<button class="pb-3 text-on-surface-variant hover:text-primary font-label-md transition-colors">Demos</button>
+<button class="pb-3 text-on-surface-variant hover:text-primary font-label-md transition-colors">Visits</button>
+<button class="pb-3 text-on-surface-variant hover:text-primary font-label-md transition-colors text-on-tertiary-fixed-variant">Fees</button>
+<button class="pb-3 text-on-surface-variant hover:text-primary font-label-md transition-colors">Callbacks</button>
+</div>
+<div class="flex gap-4 pb-3">
+<div class="flex gap-2">
+<span class="px-3 py-1 rounded-full bg-error-container text-on-error-container font-label-md text-label-sm border border-error/10">Overdue (4)</span>
+<span class="px-3 py-1 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-sm">Due Today (8)</span>
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-sm">Upcoming</span>
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-sm">Completed</span>
+</div>
+<div class="w-px h-6 bg-outline-variant mx-1"></div>
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+<span class="font-label-md">Filters</span>
+</button>
+</div>
+</div>
+<!-- Dashboard Layout -->
+<div class="flex-1 grid grid-cols-12 gap-6 overflow-hidden">
+<!-- Main Content Area: List View -->
+<div class="col-span-12 lg:col-span-8 flex flex-col gap-4 overflow-hidden">
+<!-- Bulk Actions -->
+<div class="flex items-center justify-between bg-surface-container-low p-3 rounded-lg border border-outline-variant/50">
+<div class="flex items-center gap-4">
+<input class="rounded border-outline-variant text-primary focus:ring-primary w-5 h-5" type="checkbox"/>
+<span class="font-label-md text-on-surface-variant">3 Selected</span>
+<div class="flex gap-2 ml-4">
+<button class="px-3 py-1 border border-outline-variant rounded hover:bg-surface text-label-md">Reschedule</button>
+<button class="px-3 py-1 border border-outline-variant rounded hover:bg-surface text-label-md">Mark Done</button>
+<button class="px-3 py-1 border border-outline-variant rounded hover:bg-surface text-label-md">Delete</button>
+</div>
+</div>
+<div class="flex items-center gap-2 text-label-md text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">sort</span>
+                        Sort by: Priority
+                    </div>
+</div>
+<!-- Task List Scroll Area -->
+<div class="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-3">
+<!-- Task Item: Overdue -->
+<div class="task-row group flex items-start gap-4 p-4 bg-surface border border-error/20 rounded-xl hover:border-error transition-all shadow-sm">
+<div class="mt-1">
+<button class="check-ring text-on-surface-variant transition-colors" onclick="this.classList.toggle('text-primary'); this.innerHTML = this.innerHTML.includes('radio_button_unchecked') ? 'check_circle' : 'radio_button_unchecked'">
+<span class="material-symbols-outlined">radio_button_unchecked</span>
+</button>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<div class="flex items-center gap-2">
+<h4 class="font-headline-md text-body-lg font-bold">Liam Henderson</h4>
+<span class="px-2 py-0.5 bg-error-container text-error text-label-sm rounded uppercase tracking-wider">Overdue</span>
+</div>
+<span class="text-label-md text-error font-bold">YESTERDAY, 4:30 PM</span>
+</div>
+<div class="flex gap-4 mb-3">
+<div class="flex items-center gap-1 text-on-surface-variant text-label-md">
+<span class="material-symbols-outlined text-[16px]">call</span>
+                                    Initial Consultation
+                                </div>
+<div class="flex items-center gap-1 text-on-surface-variant text-label-md">
+<span class="material-symbols-outlined text-[16px]">robot_2</span>
+                                    AI Agent: "Ava"
+                                </div>
+</div>
+<div class="bg-surface-container-high/50 p-3 rounded-lg border-l-4 border-primary">
+<p class="text-body-md text-on-surface italic">"Lead expressed high interest in Advanced Data Science module but had concerns about weekend scheduling. Needs confirmation on evening batch availability."</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg transition-colors text-primary"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-2 hover:bg-surface-container-highest rounded-lg transition-colors text-on-surface-variant"><span class="material-symbols-outlined">more_vert</span></button>
+</div>
+</div>
+<!-- Task Item: Due Today -->
+<div class="task-row group flex items-start gap-4 p-4 bg-surface border border-outline-variant rounded-xl hover:border-primary transition-all shadow-sm">
+<div class="mt-1">
+<button class="check-ring text-on-surface-variant transition-colors" onclick="this.classList.toggle('text-primary'); this.innerHTML = this.innerHTML.includes('radio_button_unchecked') ? 'check_circle' : 'radio_button_unchecked'">
+<span class="material-symbols-outlined">radio_button_unchecked</span>
+</button>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<div class="flex items-center gap-2">
+<h4 class="font-headline-md text-body-lg font-bold">Sophia Martinez</h4>
+<span class="px-2 py-0.5 bg-primary-container text-on-primary-container text-label-sm rounded uppercase tracking-wider">Priority</span>
+</div>
+<span class="text-label-md text-on-surface-variant">TODAY, 11:00 AM</span>
+</div>
+<div class="flex gap-4 mb-3">
+<div class="flex items-center gap-1 text-on-surface-variant text-label-md">
+<span class="material-symbols-outlined text-[16px]">video_call</span>
+                                    Course Demo Presentation
+                                </div>
+<div class="flex items-center gap-1 text-on-surface-variant text-label-md">
+<span class="material-symbols-outlined text-[16px]">robot_2</span>
+                                    AI Agent: "Leo"
+                                </div>
+</div>
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant/30">
+<p class="text-body-md text-on-surface-variant italic">"Demo link sent via WhatsApp. Pending confirmation of receipt."</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg transition-colors text-primary"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-2 hover:bg-surface-container-highest rounded-lg transition-colors text-on-surface-variant"><span class="material-symbols-outlined">more_vert</span></button>
+</div>
+</div>
+<!-- Task Item: Due Today 2 -->
+<div class="task-row group flex items-start gap-4 p-4 bg-surface border border-outline-variant rounded-xl hover:border-primary transition-all shadow-sm">
+<div class="mt-1">
+<button class="check-ring text-on-surface-variant transition-colors" onclick="this.classList.toggle('text-primary'); this.innerHTML = this.innerHTML.includes('radio_button_unchecked') ? 'check_circle' : 'radio_button_unchecked'">
+<span class="material-symbols-outlined">radio_button_unchecked</span>
+</button>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<div class="flex items-center gap-2">
+<h4 class="font-headline-md text-body-lg font-bold">Marcus Chen</h4>
+</div>
+<span class="text-label-md text-on-surface-variant">TODAY, 2:45 PM</span>
+</div>
+<div class="flex gap-4 mb-3">
+<div class="flex items-center gap-1 text-on-surface-variant text-label-md">
+<span class="material-symbols-outlined text-[16px]">payments</span>
+                                    Fee Instalment Verification
+                                </div>
+<div class="flex items-center gap-1 text-on-surface-variant text-label-md">
+<span class="material-symbols-outlined text-[16px]">robot_2</span>
+                                    AI Agent: "Ava"
+                                </div>
+</div>
+</div>
+<div class="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg transition-colors text-primary"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-2 hover:bg-surface-container-highest rounded-lg transition-colors text-on-surface-variant"><span class="material-symbols-outlined">more_vert</span></button>
+</div>
+</div>
+<!-- Task Item: Upcoming -->
+<div class="task-row group flex items-start gap-4 p-4 bg-surface/50 border border-outline-variant/30 rounded-xl hover:border-primary transition-all grayscale-[0.5] hover:grayscale-0 opacity-80 hover:opacity-100">
+<div class="mt-1">
+<button class="check-ring text-on-surface-variant transition-colors" onclick="this.classList.toggle('text-primary'); this.innerHTML = this.innerHTML.includes('radio_button_unchecked') ? 'check_circle' : 'radio_button_unchecked'">
+<span class="material-symbols-outlined">radio_button_unchecked</span>
+</button>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<div class="flex items-center gap-2">
+<h4 class="font-headline-md text-body-lg font-bold">Amelia Brooks</h4>
+</div>
+<span class="text-label-md text-on-surface-variant">TOMORROW, 10:00 AM</span>
+</div>
+<div class="flex gap-4 mb-3">
+<div class="flex items-center gap-1 text-on-surface-variant text-label-md">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                                    Campus Visit
+                                </div>
+<div class="flex items-center gap-1 text-on-surface-variant text-label-md">
+<span class="material-symbols-outlined text-[16px]">robot_2</span>
+                                    AI Agent: "None"
+                                </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar: Due Today / Urgent Section -->
+<div class="hidden lg:flex lg:col-span-4 flex-col gap-6 overflow-hidden">
+<!-- Urgent Sidebar Card -->
+<div class="bg-error-container/10 border border-error/20 rounded-2xl p-6 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-error flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">warning</span>
+                            Urgent Tasks
+                        </h3>
+<span class="bg-error text-on-error px-2 py-0.5 rounded text-label-sm font-bold">4</span>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-4 p-3 bg-surface rounded-lg border border-error/10 hover:shadow-md transition-shadow cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-error-container flex items-center justify-center text-error">
+<span class="material-symbols-outlined">call</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-body-md">Liam Henderson</p>
+<p class="text-label-sm text-error uppercase">Delayed 18h</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 p-3 bg-surface rounded-lg border border-error/10 hover:shadow-md transition-shadow cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-error-container flex items-center justify-center text-error">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-body-md">Fees Overdue: Sarah J.</p>
+<p class="text-label-sm text-error uppercase">Delayed 4h</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+<button class="w-full py-2 border border-error text-error font-bold rounded-lg hover:bg-error hover:text-on-error transition-all">
+                        Resolve All Overdue
+                    </button>
+</div>
+<!-- Reminders & Controls -->
+<div class="flex-1 bg-surface-container-low border border-outline-variant rounded-2xl p-6 flex flex-col gap-4 overflow-hidden">
+<h3 class="font-headline-md text-headline-md">Reminder Settings</h3>
+<div class="space-y-4 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+<div class="flex items-center justify-between p-3 bg-surface rounded-lg border border-outline-variant">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">notifications_active</span>
+<span class="text-body-md">Desktop Alerts</span>
+</div>
+<div class="w-10 h-5 bg-primary rounded-full relative">
+<div class="absolute right-1 top-1 w-3 h-3 bg-white rounded-full"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface rounded-lg border border-outline-variant">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">whatshot</span>
+<span class="text-body-md">Lead Notifications</span>
+</div>
+<div class="w-10 h-5 bg-primary rounded-full relative">
+<div class="absolute right-1 top-1 w-3 h-3 bg-white rounded-full"></div>
+</div>
+</div>
+<div class="p-4 bg-surface rounded-lg border border-outline-variant">
+<p class="text-label-md text-on-surface-variant mb-2">AUTO-RESCHEDULING</p>
+<p class="text-body-md mb-4 text-on-surface">If follow-up is missed by 2 hours, AI Agent will automatically suggest a new time via SMS.</p>
+<div class="flex items-center gap-2">
+<input checked="" class="rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-label-md">Enabled for "Warm Leads"</span>
+</div>
+</div>
+<!-- KPI Card within sidebar -->
+<div class="p-4 bg-primary text-on-primary rounded-xl shadow-lg relative overflow-hidden">
+<div class="relative z-10">
+<p class="text-label-md opacity-80">Follow-up Efficiency</p>
+<h4 class="font-display-lg text-display-lg">94.2%</h4>
+<p class="text-label-sm mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+                                    +5.4% from last week
+                                </p>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-[100px]">bolt</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Indicator (AI Processing) -->
+<div class="fixed bottom-6 right-6 bg-surface-container-lowest border border-primary/20 shadow-2xl rounded-full px-4 py-2 flex items-center gap-3 z-50">
+<div class="w-2 h-2 rounded-full bg-primary active-dot"></div>
+<span class="text-label-md font-bold text-primary">Voice Agent Processing Lead Data...</span>
+<button class="ml-2 hover:bg-surface-container-high rounded-full p-1 transition-colors">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<script>
+        // Microinteraction: Check off task effect
+        document.querySelectorAll('.task-row').forEach(row => {
+            row.addEventListener('click', (e) => {
+                if(e.target.closest('button.check-ring')) return;
+                // Interaction handled by inline onclick for the check button specifically
+            });
+        });
+        
+        // Tab switching logic (Visual only)
+        const tabs = document.querySelectorAll('button.font-label-md');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => {
+                    t.classList.remove('border-b-2', 'border-primary', 'text-primary', 'font-bold');
+                    t.classList.add('text-on-surface-variant');
+                });
+                tab.classList.add('border-b-2', 'border-primary', 'text-primary', 'font-bold');
+                tab.classList.remove('text-on-surface-variant');
+            });
+        });
+    </script>
+</body></html>

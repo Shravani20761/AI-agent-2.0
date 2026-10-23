@@ -1,0 +1,14 @@
+{
+    "name": "seagull-bot",
+    "version": "1.0.0",
+    "description": "Appwrite function for Seagull Academy chatbot using Gemini API",
+    "type": "module",
+    "main": "index.mjs",
+    "scripts": {
+      "start": "node index.mjs"
+    },
+    "dependencies": {
+      "node-fetch": "^3.3.2"
+    }
+  }
+  

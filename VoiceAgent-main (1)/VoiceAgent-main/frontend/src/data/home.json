@@ -1,0 +1,30 @@
+{
+  "hero": {
+    "title": "Seagull Science Academy",
+    "subtitle": "CET / NEET-UG / IIT-JEE / NDA ** 11th–12th Science ** 9th–10th Foundation ** Mentoring for Success ** Amongst the Best Mentors in Pune",
+    "ctaText": "Browse Courses",
+    "ctaHref": "/courses",
+    "highlight": { "name": "Amit Shinde", "achievement": "CET 98.86 (PCB) · 97.50 (PCM)" }
+  },
+  "sections": [
+    { "id": "courses", "title": "Our Courses", "layout": "cards-3x2" },
+    { "id": "why", "title": "Why Seagull Academy", "layout": "icons-grid-2x3",
+      "bullets": [
+        "Daily 3–6 hour classroom coaching",
+        "Daily topic tests & doubt sessions",
+        "Unlimited online mock tests",
+        "Expert & experienced faculties",
+        "Printed notes and recorded videos",
+        "Free career counseling & mentoring"
+      ] },
+    { "id": "mentors", "title": "Meet Our Mentors", "layout": "carousel" },
+    { "id": "achievements", "title": "Achievements & Toppers", "layout": "grid-3xN" },
+    { "id": "contactCta", "title": "Admissions Open", "layout": "cta-band",
+      "phones": ["+91 9096705353", "+91 9284635306"] }
+  ],
+  "footer": {
+    "address": "2nd floor, Arham Plaza, Near PNG Jewellers, Gavhanewasti, Bhosari",
+    "phones": ["+91 9096705353", "+91 9284635306"],
+    "website": "https://www.seagullacadmy.in"
+  }
+}

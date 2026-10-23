@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-container": "#00714d",
+                    "secondary-fixed": "#6ffbbe",
+                    "secondary": "#006c49",
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-primary-fixed-variant": "#003fa4",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "tertiary": "#7f4f00",
+                    "surface-container": "#eaedff",
+                    "surface-tint": "#0054d6",
+                    "surface-dim": "#d2d9f4",
+                    "surface-bright": "#faf8ff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "secondary-container": "#6cf8bb",
+                    "on-surface-variant": "#424656",
+                    "surface-container-highest": "#dae2fd",
+                    "primary": "#0050cb",
+                    "primary-fixed-dim": "#b3c5ff",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "inverse-on-surface": "#eef0ff",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#c2c6d8",
+                    "on-secondary-fixed": "#002113",
+                    "on-primary-fixed": "#001849",
+                    "inverse-primary": "#b3c5ff",
+                    "inverse-surface": "#283044",
+                    "on-tertiary-container": "#fff7f1",
+                    "surface-container-low": "#f2f3ff",
+                    "on-primary-container": "#f8f7ff",
+                    "background": "#faf8ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "on-background": "#131b2e",
+                    "tertiary-container": "#a06500",
+                    "on-error-container": "#93000a",
+                    "primary-fixed": "#dae1ff",
+                    "surface": "#faf8ff",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "surface-variant": "#dae2fd",
+                    "outline": "#727687",
+                    "on-surface": "#131b2e",
+                    "primary-container": "#0066ff",
+                    "on-secondary-fixed-variant": "#005236"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "margin-desktop": "32px",
+                    "gutter": "24px",
+                    "margin-mobile": "16px",
+                    "sidebar-width": "240px",
+                    "container-max-width": "1440px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Geist"],
+                    "label-md": ["Geist"],
+                    "headline-md": ["Geist"],
+                    "display-lg": ["Geist"],
+                    "headline-lg": ["Geist"],
+                    "body-lg": ["Geist"],
+                    "body-md": ["Geist"]
+            },
+            "fontSize": {
+                    "label-sm": ["11px", {"lineHeight": "12px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'Geist', sans-serif;
+            background-color: #faf8ff;
+        }
+        .sidebar-active {
+            @apply text-primary font-bold border-r-4 border-primary;
+        }
+        .ticket-row:hover {
+            background-color: rgba(0, 80, 203, 0.04);
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- Side Navigation Shell -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-surface border-r border-outline-variant flex flex-col py-base z-50">
+<div class="px-6 py-4 flex flex-col gap-1">
+<span class="font-headline-lg text-headline-lg font-black text-primary">VoiceCRM</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">AI Voice Automation</span>
+</div>
+<nav class="flex-1 mt-6 overflow-y-auto">
+<div class="flex flex-col">
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="call">call</span>Cold Calling
+                </a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="record_voice_over">record_voice_over</span>Enquiries
+                </a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="person_search">person_search</span>Warm Leads
+                </a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="event_repeat">event_repeat</span>Follow Ups
+                </a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="school">school</span>Admissions
+                </a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="star_rate">star_rate</span>Reviews
+                </a>
+<a class="flex items-center px-6 py-3 text-primary font-bold border-r-4 border-primary bg-surface-container-low transition-colors duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="support_agent">support_agent</span>Student Support
+                </a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="menu_book">menu_book</span>Academics
+                </a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="payments">payments</span>Fees
+                </a>
+<a class="flex items-center px-6 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="hub">hub</span>Communication Hub
+                </a>
+</div>
+</nav>
+<div class="px-4 py-4 border-t border-outline-variant">
+<button class="w-full py-2 bg-primary text-white rounded-lg font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-primary-container transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>New Lead
+            </button>
+</div>
+<div class="mt-auto px-6 py-4 flex flex-col gap-1">
+<a class="flex items-center py-2 text-on-surface-variant hover:text-on-surface font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>Settings
+            </a>
+<a class="flex items-center py-2 text-on-surface-variant hover:text-on-surface font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="help">help</span>Support
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-sidebar-width flex-1 flex flex-col min-w-0">
+<!-- Top Navigation Bar -->
+<header class="h-16 flex items-center justify-between px-gutter bg-surface border-b border-outline-variant sticky top-0 z-40">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-body-md focus:ring-2 focus:ring-primary" placeholder="Search tickets, students..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="h-8 w-px bg-outline-variant mx-2"></div>
+<button class="px-4 py-2 bg-surface-container-high text-on-surface font-label-md text-label-md rounded-lg flex items-center gap-2 hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="terminal">terminal</span>Command Palette
+                </button>
+<img alt="User Avatar" class="h-10 w-10 rounded-full object-cover ring-2 ring-outline-variant" data-alt="Close up portrait of a young professional man with a clean beard and sharp features, wearing a modern business casual shirt, set against a blurred high-end office background with soft cinematic lighting and a professional color palette of cool blues and warm skin tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAm4eJn7rSH_Mw28ooAnPsDhnhfXJJtyoa4vubMyQdHCAOJRN0yToNC0HE_5olwDzeGBLRQm9jRInMPChpHc19yVyoJQ1TYC-2Godbw1xkXnxQmZobM6HLTuige8r8Z0N-hZFhmkCfHO0fPtf-p36z1tiqqqv1rQZ0RXz9uHuA_cu9yu62BkUP5R2W-qHKHFAv79L-si2rK9Es0dUxJHE33RR7IwvMcQBuTkjRl8PcDCHyEsucqkVT9f_bSUSmowh9pYMdvwBGIiH6r"/>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="p-gutter max-w-container-max-width mx-auto w-full space-y-gutter">
+<!-- Page Header & Overview -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="font-display-lg text-display-lg text-on-background">Student Support Center</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Manage academic resolutions and technical student inquiries via AI-enhanced ticketing.</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex bg-surface-container rounded-lg p-1">
+<button class="px-4 py-1.5 bg-surface rounded-md shadow-sm font-label-md text-label-md text-primary">All Tickets</button>
+<button class="px-4 py-1.5 font-label-md text-label-md text-on-surface-variant hover:text-on-surface">My Assignments</button>
+</div>
+<button class="bg-primary text-white px-6 py-2 rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">
+                        Create Ticket
+                    </button>
+</div>
+</div>
+<!-- Category Cards (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant hover:border-primary transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl" data-icon="calendar_month">calendar_month</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Timetable</h3>
+<div class="mt-4 flex items-center justify-between">
+<span class="text-display-lg font-display-lg">12</span>
+<span class="px-2 py-0.5 bg-error-container text-on-error-container rounded-full text-label-sm">4 Urgent</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant hover:border-primary transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-lg bg-secondary-container/20 flex items-center justify-center text-secondary mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl" data-icon="swap_horiz">swap_horiz</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Batch Change</h3>
+<div class="mt-4 flex items-center justify-between">
+<span class="text-display-lg font-display-lg">08</span>
+<span class="px-2 py-0.5 bg-surface-variant text-on-surface-variant rounded-full text-label-sm">Active</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant hover:border-primary transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-lg bg-tertiary-fixed/20 flex items-center justify-center text-tertiary mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl" data-icon="book">book</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Study Material</h3>
+<div class="mt-4 flex items-center justify-between">
+<span class="text-display-lg font-display-lg">24</span>
+<span class="px-2 py-0.5 bg-surface-variant text-on-surface-variant rounded-full text-label-sm">Pending</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant hover:border-primary transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-lg bg-error-container/20 flex items-center justify-center text-error mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl" data-icon="phonelink_setup">phonelink_setup</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">App Issues</h3>
+<div class="mt-4 flex items-center justify-between">
+<span class="text-display-lg font-display-lg">05</span>
+<span class="px-2 py-0.5 bg-on-secondary-container/10 text-on-secondary-container rounded-full text-label-sm">Critical</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter items-start">
+<!-- Ticket Queue Table (2/3 width) -->
+<div class="lg:col-span-2 bg-surface rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+<div class="px-6 py-4 border-b border-outline-variant flex items-center justify-between bg-surface-container-lowest">
+<h2 class="font-headline-md text-headline-md">Ticket Queue</h2>
+<div class="flex gap-2">
+<select class="text-label-md font-label-md bg-surface border-outline-variant rounded-lg px-3 py-1.5 focus:ring-primary">
+<option>Status: All</option>
+<option>Open</option>
+<option>In Progress</option>
+<option>Resolved</option>
+</select>
+<button class="p-1.5 text-on-surface-variant hover:bg-surface-container rounded-lg">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant uppercase">Ticket ID</th>
+<th class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant uppercase">Student</th>
+<th class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant uppercase">Request Type</th>
+<th class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant uppercase">Status</th>
+<th class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant uppercase">Last Updated</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="ticket-row transition-colors cursor-pointer" onclick="openTicket('TK-8421')">
+<td class="px-6 py-4 font-label-md text-label-md text-primary font-bold">#TK-8421</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-fixed-dim flex items-center justify-center text-[10px] font-bold">AM</div>
+<div class="flex flex-col">
+<span class="text-body-md font-bold">Arjun Mehta</span>
+<span class="text-label-sm text-on-surface-variant">Batch B-12</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md">Timetable Clash</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-error-container text-on-error-container rounded-full text-label-sm font-bold">Open</span>
+</td>
+<td class="px-6 py-4 text-label-md text-on-surface-variant">2 mins ago</td>
+</tr>
+<tr class="ticket-row transition-colors cursor-pointer">
+<td class="px-6 py-4 font-label-md text-label-md text-primary font-bold">#TK-8399</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed-dim flex items-center justify-center text-[10px] font-bold">SP</div>
+<div class="flex flex-col">
+<span class="text-body-md font-bold">Sara Patel</span>
+<span class="text-label-sm text-on-surface-variant">Batch A-04</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md">LMS Login Issue</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-label-sm font-bold">In Progress</span>
+</td>
+<td class="px-6 py-4 text-label-md text-on-surface-variant">15 mins ago</td>
+</tr>
+<tr class="ticket-row transition-colors cursor-pointer">
+<td class="px-6 py-4 font-label-md text-label-md text-primary font-bold">#TK-8354</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed-dim flex items-center justify-center text-[10px] font-bold">RJ</div>
+<div class="flex flex-col">
+<span class="text-body-md font-bold">Rohan Joshi</span>
+<span class="text-label-sm text-on-surface-variant">Batch C-08</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md">Study Kit Missing</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-surface-variant text-on-surface-variant rounded-full text-label-sm font-bold">Resolved</span>
+</td>
+<td class="px-6 py-4 text-label-md text-on-surface-variant">1 hour ago</td>
+</tr>
+<tr class="ticket-row transition-colors cursor-pointer">
+<td class="px-6 py-4 font-label-md text-label-md text-primary font-bold">#TK-8320</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-fixed-dim flex items-center justify-center text-[10px] font-bold">KL</div>
+<div class="flex flex-col">
+<span class="text-body-md font-bold">Kavya L.</span>
+<span class="text-label-sm text-on-surface-variant">Batch B-11</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md">Fee Receipt Issue</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-label-sm font-bold">In Progress</span>
+</td>
+<td class="px-6 py-4 text-label-md text-on-surface-variant">3 hours ago</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-3 bg-surface-container-low border-t border-outline-variant flex items-center justify-between">
+<span class="text-label-md text-on-surface-variant">Showing 4 of 48 tickets</span>
+<div class="flex gap-1">
+<button class="p-1 rounded hover:bg-surface-variant"><span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span></button>
+<button class="p-1 rounded hover:bg-surface-variant"><span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span></button>
+</div>
+</div>
+</div>
+<!-- Resolution Tracking / Sidebar (1/3 width) -->
+<div class="space-y-gutter">
+<div class="bg-surface rounded-xl border border-outline-variant p-6 shadow-sm">
+<h3 class="font-headline-md text-headline-md mb-4">Resolution Tracking</h3>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between mb-2">
+<span class="text-label-md font-label-md text-on-surface-variant">Avg. Response Time</span>
+<span class="text-label-md font-bold text-primary">12 mins</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 85%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<span class="text-label-md font-label-md text-on-surface-variant">Resolution Rate</span>
+<span class="text-label-md font-bold text-secondary">94%</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 94%"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-primary-container/10 border border-primary/30 rounded-xl p-6 relative overflow-hidden" id="ticketDetailPanel">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl"></div>
+<h3 class="font-headline-md text-headline-md text-primary mb-1">Quick Action</h3>
+<p class="text-label-md text-on-primary-fixed-variant mb-6">Select a ticket to assign agents or resolve.</p>
+<div class="space-y-4">
+<div class="bg-white/60 backdrop-blur-sm p-4 rounded-lg border border-white/40">
+<div class="flex items-center gap-3 mb-3">
+<img alt="Agent" class="w-10 h-10 rounded-full object-cover" data-alt="Close up portrait of a professional female student advisor with an friendly, intelligent expression, wearing a tailored blazer and minimalist jewelry, set in a bright, modern educational administrative office with soft natural lighting and a high-key professional color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCl6GzDxQhn8fvC4T0VBgQl2GEGiQenphGmawekPu4xUNbU0cOAW3riE4MHaicgnx0eoOoUj1SCjsuftKj4IN5zvt_MpK8aM80eRrb7etf63S4Q_ASPhn08XuuqDJTq9zpJn_ZaEfRpJbC_1UUdhOla0cI056F-D603tyzX69mhPdwepMgOVZEnVHdRa-0vw25STqtAg9lasxZzC_-fAd7lucpBY2Y48DglxJS33iTzmxswDanrfCnwUObvIK1jrfYLFGtfv6_k-bRb"/>
+<div>
+<p class="text-label-md font-bold">Priya Sharma</p>
+<p class="text-label-sm text-on-surface-variant">Support Lead (AI Expert)</p>
+</div>
+</div>
+<button class="w-full py-2 bg-primary text-white rounded-lg text-label-md font-bold hover:bg-primary-container transition-colors">
+                                    Auto-Assign to Priya
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Agent Pulse Activity -->
+<div class="bg-inverse-surface text-inverse-on-surface p-8 rounded-2xl flex items-center justify-between">
+<div class="flex items-center gap-6">
+<div class="relative">
+<div class="absolute inset-0 bg-primary/40 rounded-full animate-ping"></div>
+<div class="relative w-16 h-16 bg-primary rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-3xl" data-icon="smart_toy">smart_toy</span>
+</div>
+</div>
+<div>
+<h2 class="text-headline-lg font-headline-lg">AI Voice Agent Active</h2>
+<p class="text-body-md opacity-80">Currently handling 14 initial student inquiries via voice channels.</p>
+</div>
+</div>
+<div class="hidden md:flex gap-4">
+<div class="text-right">
+<p class="text-label-sm opacity-60 uppercase tracking-tighter">AI Efficiency</p>
+<p class="text-headline-md font-bold text-secondary-fixed">+42%</p>
+</div>
+<div class="text-right">
+<p class="text-label-sm opacity-60 uppercase tracking-tighter">Calls Resolved</p>
+<p class="text-headline-md font-bold text-primary-fixed-dim">1,204</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        function openTicket(id) {
+            const panel = document.getElementById('ticketDetailPanel');
+            panel.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <span class="px-2 py-1 bg-primary text-white rounded text-[10px] font-bold uppercase tracking-wider">${id}</span>
+                    <button onclick="resetPanel()" class="text-on-surface-variant hover:text-on-surface">
+                        <span class="material-symbols-outlined text-[20px]" data-icon="close">close</span>
+                    </button>
+                </div>
+                <h3 class="font-headline-md text-headline-md text-on-background mb-1">Arjun Mehta</h3>
+                <p class="text-body-md text-on-surface-variant mb-6">"Hi, I have a clash between my Batch B-12 Python class and the Advanced Math seminar at 4 PM on Wednesdays. Please resolve."</p>
+                
+                <div class="space-y-4">
+                    <div class="p-3 bg-surface rounded-lg border border-outline-variant">
+                        <p class="text-label-sm text-on-surface-variant uppercase mb-2">Internal Notes</p>
+                        <p class="text-label-md">Student is a priority scholar. Needs immediate rescheduling.</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="flex-1 py-2 bg-secondary text-white rounded-lg text-label-md font-bold hover:opacity-90">Approve Change</button>
+                        <button class="flex-1 py-2 bg-surface border border-outline-variant text-on-surface rounded-lg text-label-md font-bold hover:bg-surface-container">Escalate</button>
+                    </div>
+                </div>
+            `;
+            panel.classList.remove('bg-primary-container/10');
+            panel.classList.add('bg-white', 'shadow-xl', 'border-primary');
+        }
+
+        function resetPanel() {
+            location.reload();
+        }
+    </script>
+</body></html>
