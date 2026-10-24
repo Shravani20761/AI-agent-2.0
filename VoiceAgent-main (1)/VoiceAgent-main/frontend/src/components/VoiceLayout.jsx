@@ -5,13 +5,13 @@ import VoiceSidebar from './VoiceSidebar';
 import VoiceHeader from './VoiceHeader';
 import CommandPalette from './CommandPalette';
 import NewLeadModal from './NewLeadModal';
-import { useToast } from './ui/Toast';
+import VoiceCallWidget from './VoiceCallWidget';
+import { VoiceCallProvider } from '../contexts/VoiceCallContext';
 
 const VoiceLayout = () => {
   const { isAuthenticated, loading } = useAuth();
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isNewLeadOpen, setIsNewLeadOpen] = useState(false);
-  const { showInfo } = useToast();
 
   useEffect(() => {
     const handleGlobalKeyDown = (e) => {
@@ -47,52 +47,41 @@ const VoiceLayout = () => {
     window.dispatchEvent(new CustomEvent('new_lead_added', { detail: leadData }));
   };
 
-  const handleMicClick = () => {
-    showInfo("Voice Assistant is listening... Speak your CRM command.");
-  };
-
   return (
-    <div className="min-h-screen bg-background text-on-surface antialiased font-sans flex">
-      {/* Sidebar Navigation */}
-      <VoiceSidebar onNewLeadClick={() => setIsNewLeadOpen(true)} />
+    <VoiceCallProvider>
+      <div className="min-h-screen bg-background text-on-surface antialiased font-sans flex">
+        {/* Sidebar Navigation */}
+        <VoiceSidebar onNewLeadClick={() => setIsNewLeadOpen(true)} />
 
-      {/* Main Container */}
-      <div className="flex-1 ml-sidebar-width flex flex-col min-h-screen">
-        {/* Top Header Bar */}
-        <VoiceHeader onCommandPaletteClick={() => setIsCommandPaletteOpen(true)} />
+        {/* Main Container */}
+        <div className="flex-1 ml-sidebar-width flex flex-col min-h-screen">
+          {/* Top Header Bar */}
+          <VoiceHeader onCommandPaletteClick={() => setIsCommandPaletteOpen(true)} />
 
-        {/* Content Canvas */}
-        <main className="flex-1 pt-16 min-h-screen flex flex-col">
-          <Outlet />
-        </main>
-      </div>
-
-      {/* Overlay: Command Palette */}
-      <CommandPalette
-        isOpen={isCommandPaletteOpen}
-        onClose={() => setIsCommandPaletteOpen(false)}
-        onNewLeadClick={() => setIsNewLeadOpen(true)}
-      />
-
-      {/* Overlay: New Lead Modal */}
-      <NewLeadModal
-        isOpen={isNewLeadOpen}
-        onClose={() => setIsNewLeadOpen(false)}
-        onSave={handleNewLeadSave}
-      />
-
-      {/* Simulated AI Voice Agent Floating Indicator (Persisting at bottom-right) */}
-      <div 
-        onClick={handleMicClick}
-        className="fixed bottom-6 right-6 flex items-center gap-3 bg-primary text-white px-4 py-3 rounded-full shadow-2xl z-40 animate-pulse hover:animate-none active:scale-95 transition-all cursor-pointer"
-      >
-        <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>mic</span>
-        <div className="flex flex-col select-none">
-          <span className="text-[11px] font-bold tracking-wider leading-tight uppercase">AI Voice Agent</span>
-          <span className="text-[9px] opacity-80 leading-none">Listening for commands...</span>
+          {/* Content Canvas */}
+          <main className="flex-1 pt-16 min-h-screen flex flex-col">
+            <Outlet />
+          </main>
         </div>
+
+        {/* Overlay: Command Palette */}
+        <CommandPalette
+          isOpen={isCommandPaletteOpen}
+          onClose={() => setIsCommandPaletteOpen(false)}
+          onNewLeadClick={() => setIsNewLeadOpen(true)}
+        />
+
+        {/* Overlay: New Lead Modal */}
+        <NewLeadModal
+          isOpen={isNewLeadOpen}
+          onClose={() => setIsNewLeadOpen(false)}
+          onSave={handleNewLeadSave}
+        />
+
+        {/* VoiceKit Demo Widget — global floating call interface */}
+        <VoiceCallWidget />
       </div>
-    </div>
+    </VoiceCallProvider>
   );
 };
 

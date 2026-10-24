@@ -28,6 +28,7 @@ import settingsRoutes from './routes/settings.routes.js';
 import dialerRoutes from './routes/dialer.routes.js';
 import webhooksRoutes from './routes/webhooks.routes.js';
 import academicsRoutes from './routes/academics.routes.js';
+import voicekitRoutes from './routes/voicekit.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -154,6 +155,7 @@ app.use('/api/reviews',         reviewsRoutes);
 app.use('/api/agent-logs',      agentLogsRoutes);
 app.use('/api/settings',        settingsRoutes);
 app.use('/api/dialer',          dialerRoutes);
+app.use('/api/voicekit',        voicekitRoutes);
 
 // ─── Dograh MCP endpoint ─────────────────────────────────────────────────────
 app.all('/mcp', mcpHandler);

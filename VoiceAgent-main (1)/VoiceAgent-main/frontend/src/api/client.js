@@ -24,14 +24,18 @@ async function request(path, options = {}) {
 
   const res = await fetch(`${BASE}${path}`, { ...options, headers });
 
+  const data = await res.json();
   if (res.status === 401) {
+    // On the login endpoint, throw so the caller can show the error.
+    // On protected routes, clear session and redirect.
+    if (path === '/auth/login') {
+      throw new Error(data.error || 'Invalid credentials');
+    }
     localStorage.removeItem('voicecrm_session');
     localStorage.removeItem('voicecrm_user');
     window.location.href = '/login';
     return;
   }
-
-  const data = await res.json();
   if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
   return data;
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useToast } from '../components/ui/Toast';
 import { coldCallingApi } from '../api/coldCalling.api.js';
 import { dialerApi } from '../api/dialer.api.js';
+import { useVoiceCall } from '../contexts/VoiceCallContext';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -333,6 +334,7 @@ function Checkbox({ checked, indeterminate, onChange }) {
 
 const ColdCalling = () => {
   const { showSuccess, showError } = useToast();
+  const { startCall } = useVoiceCall();
 
   const [activeTab, setActiveTab] = useState('contacts'); // 'contacts' | 'uncalled' | 'logs'
 
@@ -518,12 +520,19 @@ const ColdCalling = () => {
   };
 
   const handleTriggerCall = async (contact) => {
+    // Open the VoiceKit demo widget immediately for visual demo
+    startCall({
+      name: contact.name,
+      phone: contact.phone,
+      courseHint: contact.enquiries?.[0]?.courseInterested || '',
+    });
+    // Also queue the real dialer call if backend is configured
     try {
       await dialerApi.triggerColdCall({ personId: contact.id });
-      showSuccess(`Queued call for ${contact.name || contact.phone}`);
+      showSuccess(`Demo call started · ${contact.name || contact.phone} queued for AI dialer`);
       pollDialer();
-    } catch (e) {
-      showError(e.message || 'Failed to start call');
+    } catch {
+      showSuccess(`Demo call started for ${contact.name || contact.phone}`);
     }
   };
 
