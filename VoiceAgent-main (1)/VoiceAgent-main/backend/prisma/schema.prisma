@@ -155,6 +155,17 @@ enum TeacherAvailabilityStatus {
   PARTIAL
 }
 
+enum DemoMode {
+  GEMINI_LIVE
+  SARVAM_PIPELINE
+}
+
+enum DemoCallStatus {
+  ACTIVE
+  COMPLETED
+  FAILED
+}
+
 // ─── Models ───────────────────────────────────────────────────────────────────
 
 model User {
@@ -588,4 +599,59 @@ model Faq {
   @@index([category])
   @@index([isActive])
   @@map("faqs")
+}
+
+// ─── Cost-benchmark demo calls (separate from production CRM / Dograh) ────────
+
+model DemoCall {
+  id             String         @id @default(uuid())
+  mode           DemoMode
+  status         DemoCallStatus @default(ACTIVE)
+  endReason      String?        @map("end_reason")
+  roomName       String         @map("room_name")
+  contactName    String?        @map("contact_name")
+  contactPhone   String?        @map("contact_phone")
+  contactCourse  String?        @map("contact_course")
+  startedAt      DateTime       @default(now()) @map("started_at")
+  endedAt        DateTime?      @map("ended_at")
+  lastActivityAt DateTime       @default(now()) @map("last_activity_at")
+  durationSecs   Int?           @map("duration_secs")
+
+  audioInputTokens  Int? @map("audio_input_tokens")
+  audioOutputTokens Int? @map("audio_output_tokens")
+  sttAudioSecs      Int? @map("stt_audio_secs")
+  ttsCharacters     Int? @map("tts_characters")
+  ttsAudioSecs      Int? @map("tts_audio_secs")
+  llmInputTokens    Int? @map("llm_input_tokens")
+  llmOutputTokens   Int? @map("llm_output_tokens")
+  lastUsageSeq      Int? @map("last_usage_seq")
+
+  totalCostInr   Float? @map("total_cost_inr")
+  costPerMinInr  Float? @map("cost_per_min_inr")
+  pricingVersion String @default("2026-10-provisional") @map("pricing_version")
+  costBasis      String @default("provisional_estimate") @map("cost_basis")
+
+  toolCalls DemoToolCall[]
+
+  @@index([mode])
+  @@index([startedAt])
+  @@index([status])
+  @@map("demo_calls")
+}
+
+model DemoToolCall {
+  id         String   @id @default(uuid())
+  demoCallId String   @map("demo_call_id")
+  toolName   String   @map("tool_name")
+  arguments  Json
+  result     Json?
+  success    Boolean  @default(true)
+  durationMs Int?     @map("duration_ms")
+  calledAt   DateTime @default(now()) @map("called_at")
+
+  demoCall DemoCall @relation(fields: [demoCallId], references: [id], onDelete: Cascade)
+
+  @@index([demoCallId])
+  @@index([calledAt])
+  @@map("demo_tool_calls")
 }

@@ -619,7 +619,7 @@ export default function VoiceCallWidget() {
           <div className="px-4 pb-3">
             <p className="text-[9px] text-outline text-center leading-relaxed">
               {mode === 'livekit'
-                ? `LiveKit WebRTC · OpenAI Realtime · ${lkServer || 'aishravani-sr922vvg.livekit.cloud'}`
+                ? `LiveKit WebRTC · no AI model loaded${lkServer ? ` · ${lkServer}` : ''}`
                 : 'Demo simulation · LiveKit agent not reachable'}
             </p>
           </div>

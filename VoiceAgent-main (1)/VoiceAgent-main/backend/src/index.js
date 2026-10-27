@@ -29,11 +29,17 @@ import dialerRoutes from './routes/dialer.routes.js';
 import webhooksRoutes from './routes/webhooks.routes.js';
 import academicsRoutes from './routes/academics.routes.js';
 import voicekitRoutes from './routes/voicekit.routes.js';
+import demoRoutes from './routes/demo.routes.js';
+import { startDemoMaintenance } from './controllers/demo.controller.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const frontendOrigin = process.env.FRONTEND_URL;
+const costDashboardOrigin = process.env.COST_DASHBOARD_URL || 'http://localhost:5174';
 
-app.use(cors({ origin: process.env.FRONTEND_URL || '*' }));
+app.use(cors({
+  origin: !frontendOrigin || frontendOrigin === '*' ? true : [frontendOrigin, costDashboardOrigin],
+}));
 app.use(express.json());
 
 // ─── Health ───────────────────────────────────────────────────────────────────
@@ -137,6 +143,10 @@ app.use('/api/auth', authRoutes);
 // ─── Dograh webhooks (public — no JWT) ───────────────────────────────────────
 app.use('/api/webhooks', webhooksRoutes);
 
+// Demo cost-tracking routes. This mode is not the production CRM or Dograh setting.
+// Start, mode changes, tool logs, and history deletion are rate limited.
+app.use('/api/demo', demoRoutes);
+
 // ─── Protected CRM routes ────────────────────────────────────────────────────
 app.use('/api/dashboard',       dashboardRoutes);
 app.use('/api/enquiries',       enquiriesRoutes);
@@ -166,6 +176,8 @@ app.listen(PORT, async () => {
   console.log(`Backend running on http://localhost:${PORT}`);
   console.log(`MCP endpoint: http://localhost:${PORT}/mcp`);
   console.log(`Pre-call fetch: http://localhost:${PORT}/api/calls/pre-fetch`);
+  console.log(`Demo cost API: http://localhost:${PORT}/api/demo/config`);
+  startDemoMaintenance();
 
   // Resume dialer if there were queued jobs from before restart.
   // Wrapped so a transient DB timeout (e.g. Neon SocketTimeout) doesn't crash boot.

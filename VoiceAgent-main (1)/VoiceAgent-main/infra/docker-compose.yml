@@ -1,0 +1,30 @@
+services:
+  livekit:
+    image: livekit/livekit-server:latest
+    restart: unless-stopped
+    ports:
+      - "7880:7880"
+      - "7881:7881/tcp"
+      - "7882:7882/udp"
+    volumes:
+      - ./livekit.yaml:/etc/livekit.yaml
+    command: --config /etc/livekit.yaml
+
+  backend:
+    build: ../backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    env_file: ../backend/.env
+    depends_on:
+      - livekit
+
+  agent:
+    build: ../agent
+    restart: unless-stopped
+    env_file: ../agent/.env
+    environment:
+      DEMO_BACKEND_URL: http://backend:3001
+    depends_on:
+      - livekit
+      - backend
