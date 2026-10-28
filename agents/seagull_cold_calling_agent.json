@@ -1,0 +1,219 @@
+{
+  "_meta": {
+    "agent": "Cold Calling Agent — Seagull Science Academy",
+    "direction": "OUTBOUND",
+    "language": "Marathi + daily English (Pune-style colloquial)",
+    "purpose": "First contact with unknown leads. Qualify interest only — do not sell.",
+    "built_for": "Seagull Science Academy, Bhosari, Pune",
+    "dograh_workflow_id": 4,
+    "dograh_workflow_uuid": "753fb808-6adf-4d22-9554-eb127e30bdfe",
+    "status": "LIVE — prompts and extraction variables already uploaded via API",
+    "manual_steps_remaining": [
+      "Add 4 disposition codes in Dograh UI: interested, callback_requested, not_interested, wrong_number",
+      "Add telephony configuration (vobiz, telephony_configuration_id: 1)",
+      "Publish the draft version in Dograh UI",
+      "Copy workflow UUID into backend/.env as DOGRAH_WORKFLOW_COLD_CALLING_UUID=753fb808-6adf-4d22-9554-eb127e30bdfe",
+      "Copy workflow ID into backend/.env as DOGRAH_WORKFLOW_COLD_CALLING_ID=4"
+    ]
+  },
+
+  "name": "Cold Calling Agent - Seagull",
+
+  "call_disposition_codes": {
+    "disposition_codes": [
+      "interested",
+      "callback_requested",
+      "not_interested",
+      "wrong_number"
+    ],
+    "_notes": {
+      "interested": "Caller wants to know more, attend demo, or have counselor call. Auto-creates Hot Lead + Follow-Up in CRM.",
+      "callback_requested": "Caller is busy now, asks to be called at a specific time. Auto-creates Follow-Up with callback_time extracted.",
+      "not_interested": "Clear refusal. Logs ColdCall record only, no further action.",
+      "wrong_number": "Number does not belong to a valid person. Marks queue item DNC."
+    }
+  },
+
+  "initial_context_variables": {
+    "_note": "These are sent by the dialer worker when triggering this workflow. Reference them in prompts as {{variable_name}}.",
+    "customer_name": "Person's name if known — agent greets by name. Use {{customer_name | कोणाशी तरी}} for fallback.",
+    "course_interested": "Course hint from the uploaded contact list. e.g. IIT-JEE Preparation, NEET-UG Preparation.",
+    "notes": "Any extra context about this contact. e.g. '10th standard student, board exams in March'.",
+    "prior_contact": "Always 'first_time' for cold calls."
+  },
+
+  "workflow_definition": {
+    "nodes": [
+
+      {
+        "id": "0",
+        "type": "globalNode",
+        "position": { "x": -325, "y": 480 },
+        "data": {
+          "name": "Global Node",
+          "allow_interrupt": false,
+          "prompt": "तुम्ही Priya आहात — Seagull Science Academy, Bhosari, Pune च्या Calling Team मधून.\n\nहा पहिला contact आहे. Goal: lead qualify करणे, admission sell नाही.\n\nCONTEXT:\nName: {{customer_name | कोणाशी तरी}}\nCourse: {{course_interested}}\nNotes: {{notes}}\n\nLANGUAGE:\nMarathi बोला + daily English words freely वापरा — Student, Class, Coaching, Demo, Interested, Batch, Fees, Contact, Available, Counselor. Short sentences. Natural Pune-style.\n\nRULES:\n- एका वेळी एकच question\n- Fees ची detail नको\n- Admission close करू नका — फक्त interest confirm करा\n- Interest नसेल तर gracefully end करा\n- Busy असेल तर callback time घ्या\n\nOUTCOMES: interested | callback_requested | not_interested | wrong_number"
+        }
+      },
+
+      {
+        "id": "1",
+        "type": "startCall",
+        "position": { "x": 175, "y": 60 },
+        "data": {
+          "name": "Start Call",
+          "allow_interrupt": false,
+          "add_global_prompt": true,
+          "delayed_start": false,
+          "is_start": true,
+          "greeting_type": "text",
+          "delayed_start_duration": 2,
+          "extraction_enabled": false,
+          "pre_call_fetch_enabled": false,
+          "prompt": "\"नमस्कार! मी Priya बोलतेय — Seagull Science Academy, Bhosari मधून. {{customer_name | आपण}} बोलतोय का?\"\n\nजर हो:\n\"एक-दोन minutes बोलता येईल का?\"\n\nजर busy:\n\"कधी call करू — कोणती वेळ convenient आहे?\"\n\nजर wrong person / number:\nEnd call करा.",
+          "_prompt_notes": [
+            "Keep greeting under 2 sentences — latency is critical in first 3 seconds",
+            "Do NOT say the full Academy name twice — once in intro is enough",
+            "If caller immediately says wrong number, go directly to End Call"
+          ]
+        }
+      },
+
+      {
+        "id": "2",
+        "type": "agentNode",
+        "position": { "x": 615.5, "y": 476 },
+        "data": {
+          "name": "Main Agenda and Questions",
+          "allow_interrupt": false,
+          "add_global_prompt": true,
+          "extraction_enabled": true,
+          "extraction_prompt": "",
+          "prompt": "हळूहळू खालील माहिती घ्या:\n\n1. \"Student कोणत्या class मध्ये आहे?\"\n2. \"JEE / NEET / CET / Foundation / Board — कशात interest आहे?\"\n3. \"सध्या कुठे Coaching चालू आहे का?\"\n4. \"एकदा free Demo class साठी यायला available आहे का?\"\n\nInterested असेल:\n\"Perfect! आमचे Counselor सगळ्या details देतील — Demo class पण arrange होईल.\"\n\nCallback हवा असेल:\n\"कोणत्या वेळी call केलं तर convenient होईल?\"\n\nInterest नाही:\n\"No problem! कधी information हवी असेल तर नक्की contact करा.\"\n\nएका वेळी एकच question. Pressure देऊ नका.",
+          "_prompt_notes": [
+            "Don't ask all 4 questions in sequence like a script — read the conversation and skip irrelevant ones",
+            "If course_interested is provided in context, skip question 2 and confirm: 'JEE साठी बघतोय का?'",
+            "Stop after getting enough info — don't drag the call",
+            "Demo question is the closing move — only ask after gauging interest"
+          ],
+          "extraction_variables": [
+            {
+              "name": "interest_level",
+              "type": "string",
+              "prompt": "How interested was the caller? Choose one exactly: very_interested, somewhat_interested, not_interested, wrong_number"
+            },
+            {
+              "name": "preferred_course",
+              "type": "string",
+              "prompt": "Which course did the caller show interest in? e.g. JEE, NEET, CET, Foundation, Board. Empty string if not mentioned."
+            },
+            {
+              "name": "student_class",
+              "type": "string",
+              "prompt": "What class or grade is the student in? e.g. 9th, 10th, 11th, 12th. Empty string if not mentioned."
+            },
+            {
+              "name": "callback_time",
+              "type": "string",
+              "prompt": "If caller asked for a callback, what time or day did they mention? e.g. 'Saturday evening', 'tomorrow 5pm', 'Sunday morning'. Empty string if no callback was requested."
+            },
+            {
+              "name": "currently_has_coaching",
+              "type": "boolean",
+              "prompt": "Did the caller mention the student is currently enrolled in any coaching class or tuition? true or false."
+            }
+          ]
+        }
+      },
+
+      {
+        "id": "4",
+        "type": "endCall",
+        "position": { "x": 175, "y": 900 },
+        "data": {
+          "name": "End Call",
+          "allow_interrupt": false,
+          "add_global_prompt": false,
+          "is_end": true,
+          "extraction_enabled": false,
+          "extraction_prompt": "",
+          "extraction_variables": [],
+          "prompt": "Interested:\n\"Great! आमचा Counselor लवकरच contact करेल. Thanks for your time!\"\n\nCallback:\n\"ठीक आहे — [त्यांनी सांगितलेल्या वेळी] call करतो. Bye!\"\n\nNot interested:\n\"ठीक आहे, Thanks! काही लागलं तर नक्की call करा.\"\n\nWrong number:\n\"Sorry — चुकीचा number दिसतोय. Bye!\"\n\nDisposition set करा आणि call end करा.",
+          "_prompt_notes": [
+            "End lines must be SHORT — agent is ending the call, not starting a new topic",
+            "Do NOT add 'Have a nice day' in Marathi after wrong number — just end it"
+          ]
+        }
+      }
+
+    ],
+
+    "edges": [
+      {
+        "id": "1-2",
+        "animated": true,
+        "type": "custom",
+        "source": "1",
+        "target": "2",
+        "data": {
+          "label": "Move to Main Agenda",
+          "condition": "Choose this when caller is available, introduction is done, and you are ready to qualify them."
+        }
+      },
+      {
+        "id": "1-4",
+        "animated": true,
+        "type": "custom",
+        "source": "1",
+        "target": "4",
+        "data": {
+          "label": "End call early",
+          "condition": "Choose this when caller is wrong person, wrong number, or refuses to continue from the very start."
+        }
+      },
+      {
+        "id": "2-4",
+        "animated": true,
+        "type": "custom",
+        "source": "2",
+        "target": "4",
+        "data": {
+          "label": "End call",
+          "condition": "Choose this when qualification is complete — caller is interested, wants callback, or is not interested."
+        }
+      }
+    ],
+
+    "viewport": { "x": 451.11, "y": -245.9, "zoom": 1.06 }
+  },
+
+  "extraction_variables_reference": {
+    "_note": "What the CRM does with each extracted value after the call:",
+    "interest_level": "Logged in ColdCall record notes. Helps filter quality of leads.",
+    "preferred_course": "Pre-fills the Hot Lead record's course field when promoting from cold call.",
+    "student_class": "Saved in ColdCall notes. Counselor uses this when calling back.",
+    "callback_time": "When disposition=callback_requested, this becomes the FollowUp due_at date. Parse it before saving.",
+    "currently_has_coaching": "Logged as context. If true, counselor pitch should be about switching / better results."
+  },
+
+  "crm_outcome_map": {
+    "_note": "Dialer worker in backend/src/workers/dialerWorker.js handles these automatically:",
+    "interested": "Creates WarmLead (Hot Lead) + FollowUp type=DEMO_SCHEDULING due in 24 hours",
+    "callback_requested": "Creates FollowUp type=CALLBACK, due_at = callback_time extracted from call",
+    "not_interested": "Logs ColdCall record only",
+    "wrong_number": "Marks OutboundCallQueue item as DNC — no more calls to this number"
+  },
+
+  "telephony_configuration": {
+    "provider": "vobiz",
+    "telephony_configuration_id": 1,
+    "caller_number": "+918071582722",
+    "_note": "Set this in Dograh workflow settings under Telephony Configuration"
+  },
+
+  "env_vars_to_set": {
+    "DOGRAH_WORKFLOW_COLD_CALLING_UUID": "753fb808-6adf-4d22-9554-eb127e30bdfe",
+    "DOGRAH_WORKFLOW_COLD_CALLING_ID": "4",
+    "_note": "Add these to backend/.env then restart the backend server"
+  }
+}

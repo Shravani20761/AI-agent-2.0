@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VoiceCRM | Student Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#00714d",
+                        "secondary-fixed": "#6ffbbe",
+                        "secondary": "#006c49",
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-primary-fixed-variant": "#003fa4",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "tertiary": "#7f4f00",
+                        "surface-container": "#eaedff",
+                        "surface-tint": "#0054d6",
+                        "surface-dim": "#d2d9f4",
+                        "surface-bright": "#faf8ff",
+                        "secondary-fixed-dim": "#4edea3",
+                        "secondary-container": "#6cf8bb",
+                        "on-surface-variant": "#424656",
+                        "surface-container-highest": "#dae2fd",
+                        "primary": "#0050cb",
+                        "primary-fixed-dim": "#b3c5ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "inverse-on-surface": "#eef0ff",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#c2c6d8",
+                        "on-secondary-fixed": "#002113",
+                        "on-primary-fixed": "#001849",
+                        "inverse-primary": "#b3c5ff",
+                        "inverse-surface": "#283044",
+                        "on-tertiary-container": "#fff7f1",
+                        "surface-container-low": "#f2f3ff",
+                        "on-primary-container": "#f8f7ff",
+                        "background": "#faf8ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#131b2e",
+                        "tertiary-container": "#a06500",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#dae1ff",
+                        "surface": "#faf8ff",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "surface-variant": "#dae2fd",
+                        "outline": "#727687",
+                        "on-surface": "#131b2e",
+                        "primary-container": "#0066ff",
+                        "on-secondary-fixed-variant": "#005236"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "margin-desktop": "32px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "sidebar-width": "240px",
+                        "container-max-width": "1440px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Geist"],
+                        "label-md": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["11px", { "lineHeight": "12px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "600" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Geist', sans-serif; }
+        .sidebar-item-active { border-right: 4px solid #0050cb; font-weight: 700; color: #0050cb; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #c2c6d8; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased flex">
+<!-- SideNavBar (Shared Component JSON Source) -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-surface border-r border-outline-variant flex flex-col py-base z-50">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-headline-md" data-icon="hub">hub</span>
+</div>
+<div>
+<h1 class="font-headline-lg text-headline-lg font-black text-primary leading-none">VoiceCRM</h1>
+<p class="text-label-md font-label-md text-on-surface-variant">AI Voice Automation</p>
+</div>
+</div>
+<button class="mx-4 mb-6 bg-primary text-on-primary font-bold py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-primary-container transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+            New Lead
+        </button>
+<nav class="flex-1 overflow-y-auto custom-scrollbar px-2 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+                Cold Calling
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="record_voice_over">record_voice_over</span>
+                Enquiries
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="person_search">person_search</span>
+                Warm Leads
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="event_repeat">event_repeat</span>
+                Follow Ups
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-primary font-bold border-r-4 border-primary bg-surface-container-low transition-colors font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+                Admissions
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="star_rate">star_rate</span>
+                Reviews
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="support_agent">support_agent</span>
+                Student Support
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+                Academics
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+                Fees
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="hub">hub</span>
+                Communication Hub
+            </a>
+</nav>
+<div class="px-2 pt-4 border-t border-outline-variant space-y-1 mt-4">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+                Support
+            </a>
+</div>
+</aside>
+<!-- Main Content Shell -->
+<main class="ml-sidebar-width flex-1 flex flex-col min-h-screen">
+<!-- TopNavBar (Shared Component JSON Source) -->
+<header class="h-16 flex justify-between items-center px-gutter bg-surface border-b border-outline-variant sticky top-0 z-40">
+<div class="flex items-center flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-body-md font-body-md focus:ring-2 focus:ring-primary ring-offset-2 transition-all" placeholder="Search students, courses, or batches..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 bg-surface-container-highest px-4 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+                    Command Palette
+                    <span class="ml-2 text-[10px] bg-surface-container p-1 rounded">⌘K</span>
+</button>
+<button class="hover:bg-surface-container-low p-2 rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="hover:bg-surface-container-low p-2 rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
+<img alt="User Profile Avatar" class="w-9 h-9 rounded-full object-cover border border-outline-variant" data-alt="A professional headshot of a smiling user in a light-filled modern office setting. The individual has a confident yet approachable demeanor, wearing stylish casual business attire. The photograph is captured with a shallow depth of field, emphasizing the crisp facial features against a softly blurred background of high-tech office equipment and greenery, aligning with a premium corporate tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJKh1UWvE6M79ulNy6T9iib88EwtmvU08UZJ5bDZopw6hEx1kvvtVcyxZxGl2PP9NmbOKQrkzogXH_8JOrw7OE-zSr4wCoNuAguouAC9sQa1exqdSRZhCIdWeVyprptgWVCcWFkn6fCfXfKsP632Nq9GfWWNwnSHvENrCQuviC-PscVpsyrvIrqzp9dntFP-ZnvOty6edJgtEZG6ZWxCnBQH-HND0E5WPxiRoQt7gOLE5BIrNYl_e96Wtc6LU1LtMJdWLHOOttUUJa"/>
+</div>
+</header>
+<!-- Unified Student Management Content -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Left Side: Student Directory -->
+<section class="w-[450px] border-r border-outline-variant flex flex-col bg-surface-container-lowest">
+<div class="p-6 border-b border-outline-variant">
+<div class="flex justify-between items-center mb-4">
+<h2 class="font-headline-md text-headline-md">Student Directory</h2>
+<button class="text-primary hover:bg-primary-container/10 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+</button>
+</div>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-primary text-on-primary text-label-sm font-label-sm rounded-full">All Students</span>
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant text-label-sm font-label-sm rounded-full cursor-pointer hover:bg-outline-variant transition-colors">Active</span>
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant text-label-sm font-label-sm rounded-full cursor-pointer hover:bg-outline-variant transition-colors">Fee Overdue</span>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar">
+<!-- Student Row 1 (Active/Selected) -->
+<div class="group p-4 border-b border-outline-variant bg-primary-container/5 border-l-4 border-l-primary cursor-pointer transition-all">
+<div class="flex items-start gap-4">
+<img alt="Student Avatar" class="w-12 h-12 rounded-full object-cover" data-alt="A high-quality portrait of a young female student with a bright, motivated expression, wearing a stylish denim jacket. She is positioned against a vibrant, out-of-focus city background during the golden hour, creating a warm and energetic feel. The lighting is soft and flattering, emphasizing a modern, tech-focused educational vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDG_y5bgrk9g3F9H-PeQD7wwkWeU8w6yU7CW2e1QFLyElv5Hm_ZI5l-xV6FRBDe6JRk11Dc8mpL20kmuxll-QsEAPjd3NaSRERZg6la-yxzxlKQMAveHYSbjI-VnLfOOzvOUBGQilRyur_Vw2OGnW3Kh_uUqNdRUZKMGzfCRE6qDnKi3Yxe2g6vS7hlgN9Ma5FBobzLW_FtGhua0PwsEX1APRC7FGI3chxcKHkyKYNIJPPqk54C_1oXDSuwc7s1Hi-gbIsljurSQ-iH"/>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md text-label-md text-primary font-bold">Amara Okafor</h3>
+<span class="px-2 py-0.5 bg-secondary-container/30 text-secondary text-[10px] font-bold rounded uppercase tracking-wider">Active</span>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant mb-1">B-2024 / Full Stack Dev</p>
+<div class="flex items-center gap-2 text-label-sm font-label-sm text-outline">
+<span class="material-symbols-outlined text-sm" data-icon="phone">phone</span>
+                                    +1 (555) 012-3456
+                                </div>
+</div>
+</div>
+</div>
+<!-- Student Row 2 -->
+<div class="group p-4 border-b border-outline-variant hover:bg-surface-container-low cursor-pointer transition-all">
+<div class="flex items-start gap-4">
+<img alt="Student Avatar" class="w-12 h-12 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="A studio portrait of a young male student with glasses, looking thoughtful and intelligent. He is wearing a minimalist gray sweatshirt. The background is a clean, neutral gradient that fits the modern academic look. Lighting is directional and professional, highlighting his features with clarity and focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVtP0QLvmyWLmivOSs7WwDuT4HlvQvKLsHqQ3ajhcUJgz_VSgVUOhMf9ea52ILZ_9_yOcEl9xAJ9SrTe2_JVvoLVChRPxtxclC33oEPkL9wFK9wPDoqZLnm7k8m9qZ2UYjO43-2lZK9mftTXrOl9PDD_hv_WhzM8C48o0wjDO4-Q27TwPJjpCokBQoGdQCKKfYjbGv9JhENT7QffuGDzxlX6Jt1TjBnx5MBnnjyny4CnDidqJycKndHwICUNAUUf5kLICZrVTn3NjB"/>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md text-label-md text-on-surface font-bold">Liam Chen</h3>
+<span class="px-2 py-0.5 bg-tertiary-container/30 text-tertiary text-[10px] font-bold rounded uppercase tracking-wider">On Leave</span>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant mb-1">B-2024 / UI/UX Design</p>
+<div class="flex items-center gap-2 text-label-sm font-label-sm text-outline">
+<span class="material-symbols-outlined text-sm" data-icon="phone">phone</span>
+                                    +1 (555) 098-7654
+                                </div>
+</div>
+</div>
+</div>
+<!-- Student Row 3 -->
+<div class="group p-4 border-b border-outline-variant hover:bg-surface-container-low cursor-pointer transition-all">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center text-primary font-bold">SH</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md text-label-md text-on-surface font-bold">Sarah Hughes</h3>
+<span class="px-2 py-0.5 bg-error-container/30 text-error text-[10px] font-bold rounded uppercase tracking-wider">Fee Overdue</span>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant mb-1">B-2023 / Data Science</p>
+<div class="flex items-center gap-2 text-label-sm font-label-sm text-outline">
+<span class="material-symbols-outlined text-sm" data-icon="phone">phone</span>
+                                    +1 (555) 234-5678
+                                </div>
+</div>
+</div>
+</div>
+<!-- Additional Rows for Scroll demo -->
+<div class="group p-4 border-b border-outline-variant hover:bg-surface-container-low cursor-pointer transition-all opacity-60">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center">RD</div>
+<div class="flex-1">
+<h3 class="font-headline-md text-label-md text-on-surface font-bold">Rohan Das</h3>
+<p class="text-body-md font-body-md text-on-surface-variant mb-1">B-2024 / AI Ethics</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Side: Rich Student Profile -->
+<section class="flex-1 flex flex-col bg-surface overflow-hidden">
+<!-- Profile Header -->
+<div class="p-gutter bg-surface-container-low border-b border-outline-variant">
+<div class="flex justify-between items-start">
+<div class="flex gap-6">
+<div class="relative">
+<img alt="Amara Okafor Large" class="w-24 h-24 rounded-2xl object-cover shadow-lg border-2 border-surface" data-alt="A close-up, high-resolution portrait of a smiling woman with a clear, luminous complexion and warm expression. She has natural hair styled beautifully. The image is bathed in soft, natural daylight, reflecting a positive and professional educational environment. The overall aesthetic is clean, bright, and vibrant, fitting a modern corporate design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZlUf2jxSUwFWdYTfyM8nm_2ZOEvUwcXGeQhMXlRk71_IShDJeqFCHRi7VWHee1QaAhoXqaQubcvQmzUK7F_xQ10Ivgf2e7N_3yHgaPND-P9mHWvSQPPguGcB0HKLIUcJLMsOqbGK0lkbclKkxAQk2aJEmPh7bfJKdcUlKfggEW_4aviNLhGlYfCMOluypA_hu5aBanYFjuohGH2kN9Iu7efZaPglKKDjy0eKAlcoeD2ax16Ea87f9ovYz269mTQDottMQ3l6uWVd8"/>
+<div class="absolute -bottom-2 -right-2 bg-secondary text-on-secondary px-2 py-1 rounded-md text-[10px] font-bold">PRO</div>
+</div>
+<div>
+<h2 class="font-display-lg text-display-lg text-on-background mb-1">Amara Okafor</h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="fingerprint">fingerprint</span>
+                                    STU-2024-00892
+                                </p>
+<div class="flex gap-3 mt-4">
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-md text-label-md flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-sm" data-icon="phone_in_talk">phone_in_talk</span>
+                                        Voice Call
+                                    </button>
+<button class="bg-secondary text-on-secondary px-4 py-2 rounded-lg font-label-md text-label-md flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-sm" data-icon="chat">chat</span>
+                                        WhatsApp
+                                    </button>
+<button class="bg-surface-container-highest text-on-surface px-4 py-2 rounded-lg font-label-md text-label-md flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="more_horiz">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Mini Stats Bento -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface p-4 rounded-xl border border-outline-variant flex flex-col items-center">
+<span class="text-primary font-bold text-headline-lg">94%</span>
+<span class="text-label-sm font-label-sm text-outline uppercase">Attendance</span>
+</div>
+<div class="bg-surface p-4 rounded-xl border border-outline-variant flex flex-col items-center">
+<span class="text-secondary font-bold text-headline-lg">A+</span>
+<span class="text-label-sm font-label-sm text-outline uppercase">Test Avg</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Tabs Navigation -->
+<div class="px-gutter border-b border-outline-variant flex gap-8">
+<button class="py-4 border-b-2 border-primary text-primary font-bold text-label-md">Overview</button>
+<button class="py-4 text-on-surface-variant font-medium text-label-md hover:text-primary transition-colors">Attendance</button>
+<button class="py-4 text-on-surface-variant font-medium text-label-md hover:text-primary transition-colors">Tests</button>
+<button class="py-4 text-on-surface-variant font-medium text-label-md hover:text-primary transition-colors">Fees &amp; Invoices</button>
+<button class="py-4 text-on-surface-variant font-medium text-label-md hover:text-primary transition-colors">Communication Log</button>
+</div>
+<!-- Profile Content Area -->
+<div class="flex-1 overflow-y-auto custom-scrollbar p-gutter bg-surface-container-lowest">
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Main Column: Details -->
+<div class="col-span-8 space-y-gutter">
+<!-- Academic & Parent Info Cards -->
+<div class="grid grid-cols-2 gap-gutter">
+<div class="bg-surface border border-outline-variant p-6 rounded-2xl">
+<div class="flex items-center gap-2 mb-4 text-primary">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<h4 class="font-headline-md text-label-md uppercase tracking-wider">Academic Profile</h4>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between border-b border-outline-variant pb-2">
+<span class="text-label-md font-label-md text-outline">Batch</span>
+<span class="text-body-md font-body-md text-on-surface">Morning Warriors 2024</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant pb-2">
+<span class="text-label-md font-label-md text-outline">Course</span>
+<span class="text-body-md font-body-md text-on-surface">Full Stack Web Dev</span>
+</div>
+<div class="flex justify-between pb-2">
+<span class="text-label-md font-label-md text-outline">Joined On</span>
+<span class="text-body-md font-body-md text-on-surface">Jan 12, 2024</span>
+</div>
+</div>
+</div>
+<div class="bg-surface border border-outline-variant p-6 rounded-2xl">
+<div class="flex items-center gap-2 mb-4 text-secondary">
+<span class="material-symbols-outlined" data-icon="family_history">family_history</span>
+<h4 class="font-headline-md text-label-md uppercase tracking-wider">Parent Details</h4>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between border-b border-outline-variant pb-2">
+<span class="text-label-md font-label-md text-outline">Name</span>
+<span class="text-body-md font-body-md text-on-surface">Chidiebere Okafor</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant pb-2">
+<span class="text-label-md font-label-md text-outline">Relation</span>
+<span class="text-body-md font-body-md text-on-surface">Father</span>
+</div>
+<div class="flex justify-between pb-2">
+<span class="text-label-md font-label-md text-outline">Contact</span>
+<span class="text-body-md font-body-md text-on-surface">+1 (555) 012-3456</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Communication Log Section (High-End Density) -->
+<div class="bg-surface border border-outline-variant rounded-2xl overflow-hidden">
+<div class="bg-surface-container-low px-6 py-4 flex justify-between items-center">
+<h4 class="font-headline-md text-label-md font-bold uppercase tracking-widest text-on-surface-variant">AI Communication Log</h4>
+<span class="bg-primary-container text-on-primary-container px-3 py-1 rounded-full text-[10px] font-bold">8 TOTAL LOGS</span>
+</div>
+<div class="divide-y divide-outline-variant">
+<!-- Log Item 1 -->
+<div class="p-4 hover:bg-surface-container-low transition-colors flex gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined text-lg" data-icon="phone_callback">phone_callback</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="text-label-md font-label-md font-bold text-on-surface">Inbound Voice Query</span>
+<span class="text-label-sm font-label-sm text-outline">Today, 10:45 AM</span>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant">Student called to inquire about weekend class shifts. AI Agent handled the rescheduling automatically.</p>
+<div class="mt-2 flex gap-4">
+<button class="text-primary text-[11px] font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="play_circle">play_circle</span>
+                                                    Listen to Recording
+                                                </button>
+<button class="text-secondary text-[11px] font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="description">description</span>
+                                                    View Transcript
+                                                </button>
+</div>
+</div>
+</div>
+<!-- Log Item 2 -->
+<div class="p-4 hover:bg-surface-container-low transition-colors flex gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined text-lg" data-icon="chat">chat</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="text-label-md font-label-md font-bold text-on-surface">WhatsApp Blast</span>
+<span class="text-label-sm font-label-sm text-outline">Yesterday</span>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant">Automated "Mock Test Tomorrow" reminder sent and acknowledged by student.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Side Column: Status & Timeline -->
+<div class="col-span-4 space-y-gutter">
+<!-- Payment Status Card -->
+<div class="bg-surface border border-outline-variant p-6 rounded-2xl relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary-container/10 rounded-full -mr-16 -mt-16"></div>
+<h4 class="font-headline-md text-label-md uppercase tracking-wider mb-4 text-on-surface-variant">Fee Status</h4>
+<div class="text-center mb-6">
+<p class="text-label-sm font-label-sm text-outline mb-1">PENDING BALANCE</p>
+<h3 class="text-display-lg font-display-lg text-secondary">$0.00</h3>
+<p class="text-label-sm font-label-sm text-on-secondary-container bg-secondary-container inline-block px-3 py-1 rounded-full mt-2">Paid in Full</p>
+</div>
+<button class="w-full border-2 border-outline-variant py-2 rounded-xl text-label-md font-label-md hover:bg-surface-container-low transition-colors">
+                                    View Invoices
+                                </button>
+</div>
+<!-- Recent Activity Timeline -->
+<div class="bg-surface border border-outline-variant p-6 rounded-2xl">
+<h4 class="font-headline-md text-label-md uppercase tracking-wider mb-6 text-on-surface-variant">Recent Activity</h4>
+<div class="space-y-6 relative before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-outline-variant">
+<div class="relative flex gap-4 pl-8">
+<div class="absolute left-0 w-[24px] h-[24px] bg-primary rounded-full border-4 border-surface z-10"></div>
+<div>
+<p class="text-body-md font-body-md text-on-surface">Completed Module 4 Assessment</p>
+<span class="text-label-sm font-label-sm text-outline">2 hours ago</span>
+</div>
+</div>
+<div class="relative flex gap-4 pl-8">
+<div class="absolute left-0 w-[24px] h-[24px] bg-secondary rounded-full border-4 border-surface z-10"></div>
+<div>
+<p class="text-body-md font-body-md text-on-surface">Attendance Marked: Present</p>
+<span class="text-label-sm font-label-sm text-outline">Morning Session</span>
+</div>
+</div>
+<div class="relative flex gap-4 pl-8">
+<div class="absolute left-0 w-[24px] h-[24px] bg-outline rounded-full border-4 border-surface z-10"></div>
+<div>
+<p class="text-body-md font-body-md text-on-surface">Password Reset Successful</p>
+<span class="text-label-sm font-label-sm text-outline">Jan 18, 2024</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Contextual FAB (Restricted to Home/Admissions as per mandate) -->
+<div class="fixed bottom-8 right-8 z-[100]">
+<button class="bg-primary text-on-primary w-14 h-14 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-2xl" data-icon="add">add</span>
+</button>
+</div>
+<script>
+        // Micro-interaction for row selection
+        document.querySelectorAll('.group.cursor-pointer').forEach(row => {
+            row.addEventListener('click', function() {
+                // Simplified UI state change
+                document.querySelectorAll('.group.cursor-pointer').forEach(r => {
+                    r.classList.remove('bg-primary-container/5', 'border-l-4', 'border-l-primary');
+                    r.querySelector('h3').classList.remove('text-primary');
+                    r.querySelector('h3').classList.add('text-on-surface');
+                });
+                this.classList.add('bg-primary-container/5', 'border-l-4', 'border-l-primary');
+                this.querySelector('h3').classList.add('text-primary');
+                this.querySelector('h3').classList.remove('text-on-surface');
+            });
+        });
+
+        // Pulsing animation for AI Voice Indicator (Simulated)
+        const voiceBtn = document.querySelector('button .material-symbols-outlined[data-icon="phone_in_talk"]');
+        if(voiceBtn) {
+            setInterval(() => {
+                voiceBtn.parentElement.classList.toggle('ring-4');
+                voiceBtn.parentElement.classList.toggle('ring-primary-container/30');
+            }, 1000);
+        }
+    </script>
+</body></html>

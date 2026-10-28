@@ -1,0 +1,22 @@
+FROM node:22-alpine
+
+# Prisma needs openssl for DB connection encryption
+RUN apk add --no-cache openssl
+
+WORKDIR /app
+
+# Install all deps first (Prisma CLI is a devDependency)
+COPY package*.json ./
+RUN npm install
+
+# Copy Prisma config + schema, then generate Linux-compatible client
+COPY prisma.config.ts ./
+COPY prisma ./prisma/
+RUN npx prisma generate
+
+# Copy application source
+COPY src ./src/
+
+EXPOSE 3001
+
+CMD ["node", "src/index.js"]

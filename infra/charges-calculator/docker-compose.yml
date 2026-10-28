@@ -1,0 +1,132 @@
+name: charges-calculator
+
+# ── Internal network ─────────────────────────────────────────
+# All services communicate via this network using container names.
+# No service name is exposed to the internet except through the
+# ports listed below.
+networks:
+  charges-net:
+    driver: bridge
+
+services:
+
+  # ── LiveKit Server ─────────────────────────────────────────
+  livekit:
+    image: livekit/livekit-server:latest
+    container_name: cc-livekit
+    restart: unless-stopped
+    command: --config /etc/livekit.yaml
+    volumes:
+      - ./livekit.yaml:/etc/livekit.yaml:ro
+    ports:
+      # Port 7880 is NOT bound to host — Nginx proxies it with TLS on 7880.
+      # WebRTC TCP fallback — bound directly (Nginx cannot proxy TCP at this port)
+      - "7881:7881/tcp"
+      # WebRTC audio UDP — CRITICAL, must be directly reachable by browser
+      - "7882:7882/udp"
+    networks:
+      - charges-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:7880/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ── Backend (Express + Prisma + MCP) ──────────────────────
+  backend:
+    build:
+      context: ../../backend
+      dockerfile: Dockerfile.charges-calculator
+    container_name: cc-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      # Internal LiveKit connection (plain WS, no TLS inside Docker network)
+      LIVEKIT_URL: ws://cc-livekit:7880
+    ports:
+      # Exposed directly for debugging — remove in prod
+      - "3001:3001"
+    depends_on:
+      livekit:
+        condition: service_healthy
+    networks:
+      - charges-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  # ── AI Voice Agent ─────────────────────────────────────────
+  agent:
+    build:
+      context: ../../agent
+      dockerfile: Dockerfile.charges-calculator
+    container_name: cc-agent
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # Internal LiveKit — agent stays inside Docker network
+      LIVEKIT_URL: ws://cc-livekit:7880
+      # Backend MCP tools + usage reporting
+      DEMO_BACKEND_URL: http://cc-backend:3001
+    depends_on:
+      livekit:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    networks:
+      - charges-net
+
+  # ── Cost Dashboard (React, built static + Nginx) ───────────
+  cost-ui:
+    build:
+      context: ../../cost-dashboard
+      dockerfile: Dockerfile.charges-calculator
+    container_name: cc-cost-ui
+    restart: unless-stopped
+    ports:
+      # Exposed directly for debugging — plain HTTP, mic won't work here
+      # Use https://yourdomain.com (via Nginx) for real testing
+      - "5174:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - charges-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:80/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # ── Nginx Reverse Proxy + TLS ──────────────────────────────
+  # Handles:
+  #   443  → cost-ui (/) and backend (/api, /mcp)
+  #   7880 → LiveKit WebSocket with TLS termination
+  #   80   → redirect to HTTPS
+  nginx:
+    image: nginx:alpine
+    container_name: cc-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      # LiveKit WSS — Nginx terminates TLS then forwards plain WS to cc-livekit:7880
+      - "7880:7880"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      # Let's Encrypt certs from host — created by certbot on the VPS
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - cost-ui
+      - backend
+      - livekit
+    networks:
+      - charges-net

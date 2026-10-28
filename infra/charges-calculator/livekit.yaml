@@ -1,0 +1,20 @@
+# Self-hosted LiveKit — charges-calculator testing stack
+# Keys here MUST match LIVEKIT_API_KEY / LIVEKIT_API_SECRET in .env
+# TLS is terminated by Nginx on port 7880 — LiveKit stays plain HTTP internally.
+
+port: 7880
+
+rtc:
+  tcp_port: 7881
+  udp_port: 7882
+  # Advertises the VPS public IP in WebRTC ICE candidates.
+  # Without this, Docker internal IPs are advertised and browser audio fails.
+  use_external_ip: true
+  enable_loopback_candidate: false
+
+keys:
+  replace-with-livekit-api-key: replace-with-livekit-api-secret
+
+logging:
+  level: info
+  pion_level: error

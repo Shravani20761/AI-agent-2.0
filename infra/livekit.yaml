@@ -1,0 +1,12 @@
+# Self-hosted LiveKit. Replace the key and secret before this host is reachable
+# from the internet, and use the same pair in backend/.env and agent/.env.
+port: 7880
+rtc:
+  tcp_port: 7881
+  udp_port: 7882
+  use_external_ip: true
+  enable_loopback_candidate: false
+keys:
+  replace-with-livekit-api-key: replace-with-livekit-api-secret
+logging:
+  level: info
