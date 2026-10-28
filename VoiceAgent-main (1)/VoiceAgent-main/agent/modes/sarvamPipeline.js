@@ -20,13 +20,14 @@ export async function startSarvamPipeline(ctx, demoCallId, reporter) {
     return null;
   }
 
-  const model = process.env.DEEPSEEK_MODEL || 'deepseek-flash';
+  const model = process.env.DEEPSEEK_MODEL || 'deepseek/deepseek-chat';
+  const baseURL = process.env.DEEPSEEK_BASE_URL || 'https://openrouter.ai/api/v1';
   if (!process.env.DEEPSEEK_MODEL) {
-    console.log('[agent] DEEPSEEK_MODEL is unset. Using deepseek-flash. The retired deepseek-chat id is not the default.');
+    console.log('[agent] DEEPSEEK_MODEL is unset. Using deepseek/deepseek-chat via OpenRouter.');
   }
   console.log(
-    `[agent] Sarvam pipeline: STT ${SARVAM_STT_MODEL}, TTS ${SARVAM_TTS_MODEL}, speaker ${SARVAM_TTS_SPEAKER}, LLM ${model}. ` +
-    'Override with SARVAM_STT_MODEL, SARVAM_TTS_MODEL, or SARVAM_TTS_SPEAKER.',
+    `[agent] Sarvam pipeline: STT ${SARVAM_STT_MODEL}, TTS ${SARVAM_TTS_MODEL}, speaker ${SARVAM_TTS_SPEAKER}, LLM ${model} @ ${baseURL}. ` +
+    'Override with SARVAM_STT_MODEL, SARVAM_TTS_MODEL, SARVAM_TTS_SPEAKER, DEEPSEEK_MODEL, or DEEPSEEK_BASE_URL.',
   );
 
   const session = new voice.AgentSession({
@@ -34,7 +35,7 @@ export async function startSarvamPipeline(ctx, demoCallId, reporter) {
     turnDetection: 'vad',
     stt: new SarvamSTT(),
     tts: new SarvamTTS(),
-    llm: openai.LLM.withDeepSeek({ model, temperature: 0.6 }),
+    llm: new openai.LLM({ model, baseURL, apiKey: process.env.DEEPSEEK_API_KEY, temperature: 0.6 }),
   });
   attachUsage(session, reporter);
   await session.start({

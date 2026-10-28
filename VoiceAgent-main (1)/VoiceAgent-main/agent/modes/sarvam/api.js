@@ -2,8 +2,8 @@ const STT_URL = 'https://api.sarvam.ai/speech-to-text';
 const TTS_URL = 'https://api.sarvam.ai/text-to-speech';
 
 export const SARVAM_STT_MODEL = process.env.SARVAM_STT_MODEL || 'saaras:v4';
-export const SARVAM_TTS_MODEL = process.env.SARVAM_TTS_MODEL || 'bulbul:v2';
-export const SARVAM_TTS_SPEAKER = process.env.SARVAM_TTS_SPEAKER || 'anushka';
+export const SARVAM_TTS_MODEL = process.env.SARVAM_TTS_MODEL || 'bulbul:v3';
+export const SARVAM_TTS_SPEAKER = process.env.SARVAM_TTS_SPEAKER || 'priya';
 
 function apiKey() {
   const key = process.env.SARVAM_API_KEY;

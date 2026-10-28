@@ -29,7 +29,6 @@ export async function startGeminiLive(ctx, demoCallId, reporter) {
       apiKey,
       instructions: PRIYA_PROMPT,
       temperature: 0.6,
-      language: 'en-IN',
     }),
   });
   attachUsage(session, reporter);

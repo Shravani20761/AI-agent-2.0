@@ -2,8 +2,10 @@ import 'dotenv/config';
 import { cli, defineAgent, WorkerOptions } from '@livekit/agents';
 import { fileURLToPath } from 'node:url';
 import { createUsageReporter } from './lib/usageReporter.js';
-import { startGeminiLive } from './modes/geminiLive.js';
-import { startSarvamPipeline } from './modes/sarvamPipeline.js';
+// Dynamic imports — loaded only when that mode is actually dispatched.
+// Static imports here would load @livekit/agents-plugin-google (2.5s) and
+// the 33MB local-inference native binary in every child process before it
+// can signal ready, reliably exceeding the 10s supervised-process timeout.
 
 function readRoomMeta(room) {
   try {
@@ -54,8 +56,10 @@ export default defineAgent({
 
     try {
       if (mode === 'GEMINI_LIVE') {
+        const { startGeminiLive } = await import('./modes/geminiLive.js');
         session = await startGeminiLive(ctx, demoCallId, reporter);
       } else if (mode === 'SARVAM_PIPELINE') {
+        const { startSarvamPipeline } = await import('./modes/sarvamPipeline.js');
         session = await startSarvamPipeline(ctx, demoCallId, reporter);
       } else {
         console.log(

@@ -77,7 +77,6 @@ function safeJson(value) {
 
 function crmTool(demoCallId, name, description, parameters) {
   return llm.tool({
-    name,
     description,
     parameters,
     execute: async (args) => {

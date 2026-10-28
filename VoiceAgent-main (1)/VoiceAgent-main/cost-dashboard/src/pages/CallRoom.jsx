@@ -6,6 +6,7 @@ import CallControls from '../components/CallControls.jsx';
 import LiveCostTicker from '../components/LiveCostTicker.jsx';
 import ToolCallFeed from '../components/ToolCallFeed.jsx';
 import CostComparisonTable from '../components/CostComparisonTable.jsx';
+import AgentVisualizer from '../components/AgentVisualizer.jsx';
 
 function releaseAudio(elements) {
   elements.forEach((element) => {
@@ -26,6 +27,7 @@ export default function CallRoom() {
   const [startedAt, setStartedAt] = useState(null);
   const [toolCalls, setToolCalls] = useState([]);
   const [muted, setMuted] = useState(false);
+  const [agentSpeaking, setAgentSpeaking] = useState(false);
   const [error, setError] = useState('');
   const [pageError, setPageError] = useState('');
   const [summaryError, setSummaryError] = useState('');
@@ -133,9 +135,15 @@ export default function CallRoom() {
         audioRef.current.push(element);
         setStatus('IN_CALL');
       });
+      room.on(RoomEvent.ActiveSpeakersChanged, (speakers) => {
+        const localId = room.localParticipant?.identity;
+        const agentTalking = speakers.some((p) => p.identity !== localId);
+        setAgentSpeaking(agentTalking);
+      });
       room.on(RoomEvent.ParticipantConnected, () => setStatus('IN_CALL'));
       room.on(RoomEvent.Disconnected, () => {
         releaseAudio(audioRef.current);
+        setAgentSpeaking(false);
       });
       await room.connect(started.url, started.token);
       try {
@@ -208,7 +216,10 @@ export default function CallRoom() {
       )}
       <ModeSwitch activeMode={mode} disabled={busy} onChange={changeMode} />
       <div className="grid items-start gap-4 lg:grid-cols-2">
-        <LiveCostTicker mode={call?.mode || mode} call={call} startedAt={startedAt} status={status} />
+        <div className="flex flex-col gap-4">
+          <AgentVisualizer speaking={agentSpeaking} status={status} />
+          <LiveCostTicker mode={call?.mode || mode} call={call} startedAt={startedAt} status={status} />
+        </div>
         <ToolCallFeed toolCalls={toolCalls} />
       </div>
       <CallControls
