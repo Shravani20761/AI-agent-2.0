@@ -9,7 +9,7 @@ import { SarvamTTS } from './sarvam/tts.js';
 
 // Gemini's OpenAI-compatible endpoint — used as LLM fallback when DEEPSEEK_API_KEY is absent.
 const GEMINI_OPENAI_BASE = 'https://generativelanguage.googleapis.com/v1beta/openai/';
-const GEMINI_DEFAULT_MODEL = 'gemini-2.0-flash';
+const GEMINI_DEFAULT_MODEL = 'gemini-3.5-flash';
 
 function resolveLlm() {
   if (process.env.DEEPSEEK_API_KEY) {
