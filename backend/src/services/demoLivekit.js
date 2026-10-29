@@ -78,5 +78,6 @@ export async function openDemoRoom({ roomName, metadata, displayName }) {
     canSubscribe: true,
   });
 
-  return { token: await at.toJwt(), url, roomName };
+  const publicUrl = process.env.LIVEKIT_PUBLIC_URL || url;
+  return { token: await at.toJwt(), url: publicUrl, roomName };
 }
