@@ -74,13 +74,14 @@ services:
       - charges-net
 
   # ── Cost Dashboard (React SPA + Nginx) ────────────────────
-  # Coolify routes your domain to this service automatically.
   cost-ui:
     build:
       context: ../../cost-dashboard
       dockerfile: Dockerfile.charges-calculator
     container_name: cc-cost-ui
     restart: unless-stopped
+    ports:
+      - "4321:80"
     depends_on:
       backend:
         condition: service_healthy
