@@ -37,7 +37,7 @@ services:
     networks:
       - charges-net
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3001/health"]
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3001/health"]
       interval: 15s
       timeout: 5s
       retries: 5
@@ -71,7 +71,7 @@ services:
     networks:
       - charges-net
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:4321/health"]
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:4321/health"]
       interval: 10s
       timeout: 3s
       retries: 3
