@@ -91,7 +91,9 @@ export function attachUsage(session, reporter) {
   });
 
   session.on('error', (event) => {
-    const message = event?.error?.message || 'unknown session error';
-    console.error(`[agent] Model session error: ${message}`);
+    const err = event?.error ?? event;
+    const message = err?.message || String(err) || 'unknown session error';
+    const stack = err?.stack ? `\n${err.stack}` : '';
+    console.error(`[agent] Model session error: ${message}${stack}`);
   });
 }
