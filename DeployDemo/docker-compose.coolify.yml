@@ -1,0 +1,29 @@
+name: deploydemo
+
+networks:
+  demo-net:
+    driver: bridge
+
+services:
+
+  backend:
+    build: ./backend
+    container_name: demo-backend
+    restart: unless-stopped
+    networks:
+      - demo-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build: ./frontend
+    container_name: demo-frontend
+    restart: unless-stopped
+    networks:
+      - demo-net
+    depends_on:
+      backend:
+        condition: service_healthy
