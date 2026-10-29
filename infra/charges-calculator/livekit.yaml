@@ -1,6 +1,6 @@
 # Self-hosted LiveKit — charges-calculator testing stack
-# Keys here MUST match LIVEKIT_API_KEY / LIVEKIT_API_SECRET in .env
-# TLS is terminated by Nginx on port 7880 — LiveKit stays plain HTTP internally.
+# Keys below MUST match LIVEKIT_API_KEY / LIVEKIT_API_SECRET in Coolify env vars.
+# TLS is handled by Coolify/Traefik — LiveKit stays plain HTTP internally.
 
 port: 7880
 
@@ -13,7 +13,7 @@ rtc:
   enable_loopback_candidate: false
 
 keys:
-  replace-with-livekit-api-key: replace-with-livekit-api-secret
+  cc-dev-key: cc-dev-secret-testing-only-not-for-production
 
 logging:
   level: info
