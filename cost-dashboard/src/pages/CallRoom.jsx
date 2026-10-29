@@ -26,7 +26,8 @@ export default function CallRoom() {
   const [call, setCall] = useState(null);
   const [startedAt, setStartedAt] = useState(null);
   const [toolCalls, setToolCalls] = useState([]);
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(true);
+  const [audioBlocked, setAudioBlocked] = useState(false);
   const [agentSpeaking, setAgentSpeaking] = useState(false);
   const [error, setError] = useState('');
   const [pageError, setPageError] = useState('');
@@ -55,9 +56,7 @@ export default function CallRoom() {
     refreshSummary().catch((loadError) => {
       if (!cancelled) setSummaryError(loadError.message);
     });
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [refreshSummary]);
 
   useEffect(() => {
@@ -80,10 +79,7 @@ export default function CallRoom() {
     };
     poll();
     const timer = setInterval(poll, 2000);
-    return () => {
-      cancelled = true;
-      clearInterval(timer);
-    };
+    return () => { cancelled = true; clearInterval(timer); };
   }, [call?.id, status, refreshSummary]);
 
   useEffect(() => () => {
@@ -108,7 +104,8 @@ export default function CallRoom() {
     setError('');
     setStatus('CONNECTING');
     setToolCalls([]);
-    setMuted(false);
+    setMuted(true);
+    setAudioBlocked(false);
     try {
       const started = await demoApi.startCall({
         contactName: contact.name,
@@ -127,31 +124,49 @@ export default function CallRoom() {
 
       const room = new Room({ adaptiveStream: true, dynacast: true });
       roomRef.current = room;
+
       room.on(RoomEvent.TrackSubscribed, (track) => {
         if (track.kind !== Track.Kind.Audio) return;
         const element = track.attach();
-        element.autoplay = true;
+        element.style.display = 'none';
         document.body.appendChild(element);
         audioRef.current.push(element);
         setStatus('IN_CALL');
       });
+      room.on(RoomEvent.AudioPlaybackStatusChanged, () => {
+        setAudioBlocked(!room.canPlaybackAudio);
+      });
       room.on(RoomEvent.ActiveSpeakersChanged, (speakers) => {
         const localId = room.localParticipant?.identity;
-        const agentTalking = speakers.some((p) => p.identity !== localId);
-        setAgentSpeaking(agentTalking);
+        setAgentSpeaking(speakers.some((p) => p.identity !== localId));
       });
       room.on(RoomEvent.ParticipantConnected, () => setStatus('IN_CALL'));
       room.on(RoomEvent.Disconnected, () => {
         releaseAudio(audioRef.current);
         setAgentSpeaking(false);
+        setAudioBlocked(false);
       });
+
       await room.connect(started.url, started.token);
+
+      // Acquire mic permission upfront then immediately mute — push-to-talk starts silent
+      // so the agent can greet without acoustic echo from its own voice.
       try {
         await room.localParticipant.setMicrophoneEnabled(true);
+        await room.localParticipant.setMicrophoneEnabled(false);
       } catch {
-        setMuted(true);
-        setError('Microphone permission was denied. The room is connected without a mic.');
+        setError('Microphone permission denied. Hold-to-talk will not work.');
       }
+      setMuted(true);
+
+      // Resume the AudioContext — browsers block autoplay until a user gesture.
+      try {
+        await room.startAudio();
+      } catch {
+        // AudioPlaybackStatusChanged event will surface the blocked state.
+      }
+      setAudioBlocked(!room.canPlaybackAudio);
+
       if (room.remoteParticipants.size > 0) setStatus('IN_CALL');
       else setStatus((current) => (current === 'CONNECTING' ? 'WAITING' : current));
     } catch (startError) {
@@ -170,6 +185,7 @@ export default function CallRoom() {
     roomRef.current?.disconnect();
     roomRef.current = null;
     releaseAudio(audioRef.current);
+    setAudioBlocked(false);
     if (!id) {
       setStatus('IDLE');
       return;
@@ -185,12 +201,28 @@ export default function CallRoom() {
     }
   }
 
-  async function toggleMute() {
+  // Push-to-talk: called with true on press, false on release.
+  async function setMicActive(active) {
     const room = roomRef.current;
     if (!room) return;
-    const next = !muted;
-    await room.localParticipant.setMicrophoneEnabled(!next);
-    setMuted(next);
+    try {
+      await room.localParticipant.setMicrophoneEnabled(active);
+      setMuted(!active);
+    } catch {
+      // Ignore transient toggle errors.
+    }
+  }
+
+  // Resumes the AudioContext after a user gesture unblocks it.
+  async function enableAudio() {
+    const room = roomRef.current;
+    if (!room) return;
+    try {
+      await room.startAudio();
+      setAudioBlocked(!room.canPlaybackAudio);
+    } catch {
+      setAudioBlocked(true);
+    }
   }
 
   const busy = status === 'CONNECTING' || status === 'WAITING' || status === 'IN_CALL';
@@ -228,8 +260,10 @@ export default function CallRoom() {
         onContact={setContact}
         onStart={startCall}
         onEnd={endCall}
-        onMute={toggleMute}
+        onMicPress={setMicActive}
         muted={muted}
+        audioBlocked={audioBlocked}
+        onEnableAudio={enableAudio}
         error={error}
       />
       <CostComparisonTable summary={summary} error={summaryError} />
