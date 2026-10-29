@@ -1,0 +1,88 @@
+name: charges-calculator
+
+networks:
+  charges-net:
+    driver: bridge
+
+services:
+
+  # ── LiveKit Server ─────────────────────────────────────────
+  livekit:
+    image: livekit/livekit-server:latest
+    container_name: cc-livekit
+    restart: unless-stopped
+    command: --config /etc/livekit.yaml
+    volumes:
+      - ./infra/charges-calculator/livekit.yaml:/etc/livekit.yaml:ro
+    ports:
+      - "7881:7881/tcp"
+      - "7882:7882/udp"
+    networks:
+      - charges-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:7880/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ── Backend (Express + Prisma + MCP) ──────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.charges-calculator
+    container_name: cc-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      LIVEKIT_URL: ws://cc-livekit:7880
+    depends_on:
+      livekit:
+        condition: service_healthy
+    networks:
+      - charges-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  # ── AI Voice Agent ─────────────────────────────────────────
+  agent:
+    build:
+      context: ./agent
+      dockerfile: Dockerfile.charges-calculator
+    container_name: cc-agent
+    restart: unless-stopped
+    environment:
+      LIVEKIT_URL: ws://cc-livekit:7880
+      DEMO_BACKEND_URL: http://cc-backend:3001
+    depends_on:
+      livekit:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    networks:
+      - charges-net
+
+  # ── Cost Dashboard (React SPA + Nginx) ────────────────────
+  cost-ui:
+    build:
+      context: ./cost-dashboard
+      dockerfile: Dockerfile.charges-calculator
+    container_name: cc-cost-ui
+    restart: unless-stopped
+    ports:
+      - "4321:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - charges-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:80/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
