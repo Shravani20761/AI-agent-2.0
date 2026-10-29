@@ -149,11 +149,17 @@ export default function CallRoom() {
 
       await room.connect(started.url, started.token);
 
-      // Acquire mic permission upfront then immediately mute — push-to-talk starts silent
-      // so the agent can greet without acoustic echo from its own voice.
+      // Acquire mic permission and publish the track — then immediately silence it at the
+      // WebRTC level (mediaStreamTrack.enabled = false) rather than calling
+      // setMicrophoneEnabled(false), which would fully unpublish the track.
+      // Keeping the track published lets the agent's local VAD (Sarvam pipeline) stay
+      // subscribed throughout the session. PTT then toggles enabled, not publish state.
       try {
         await room.localParticipant.setMicrophoneEnabled(true);
-        await room.localParticipant.setMicrophoneEnabled(false);
+        const micPub = room.localParticipant.getTrackPublication(Track.Source.Microphone);
+        if (micPub?.track?.mediaStreamTrack) {
+          micPub.track.mediaStreamTrack.enabled = false;
+        }
       } catch {
         setError('Microphone permission denied. Hold-to-talk will not work.');
       }
@@ -201,15 +207,15 @@ export default function CallRoom() {
     }
   }
 
-  // Push-to-talk: called with true on press, false on release.
-  async function setMicActive(active) {
+  // Push-to-talk: toggle audio at the WebRTC track level so the track stays published
+  // and the agent's local VAD (Sarvam pipeline) remains subscribed throughout the call.
+  function setMicActive(active) {
     const room = roomRef.current;
     if (!room) return;
-    try {
-      await room.localParticipant.setMicrophoneEnabled(active);
+    const pub = room.localParticipant.getTrackPublication(Track.Source.Microphone);
+    if (pub?.track?.mediaStreamTrack) {
+      pub.track.mediaStreamTrack.enabled = active;
       setMuted(!active);
-    } catch {
-      // Ignore transient toggle errors.
     }
   }
 
