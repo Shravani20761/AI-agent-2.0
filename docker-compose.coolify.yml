@@ -65,13 +65,13 @@ services:
       dockerfile: Dockerfile.charges-calculator
     restart: unless-stopped
     ports:
-      - "4321:80"
+      - "4321:4321"
     depends_on:
       - backend
     networks:
       - charges-net
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:80/health"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:4321/health"]
       interval: 10s
       timeout: 3s
       retries: 3
